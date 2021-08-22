@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Http;
 
 namespace FilmesAPI.Controllers
 {
@@ -13,21 +14,50 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")]
     public class FilmeController : ControllerBase
     {
-
-        private static List<Filme> filmes = new List<Filme>();
+        [HttpGet]
+        public IEnumerable<Filme> RecuperaFilmes()
+        {
+            return null;
+        }
 
         [HttpPost]
-        public void adicionaFilme (Filme filme)
+        [ProducesResponseType(typeof(Filme), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult AdicionaFilme(Filme filme)
         {
-            filmes.Add(filme);
+            if(filme != null)
+            {
+                return CreatedAtAction("AdicionaFilme", filme);
+            }
+
+            return BadRequest();
+        }
+        
+        [HttpDelete("{id}")]
+
+        public ActionResult DeletaFilmes (Guid id)
+        {
+            if (id == null)
+            {
+                return Ok("Filme excluido com sucesso !");
+            }
+
+            return NotFound();
         }
 
-        [HttpGet]
 
-        public IEnumerable<Filme> RecuperaFilmes ()
+        [HttpPut("{id}")]
+
+        public ActionResult AtualizaFilme (Guid id, Filme filme)
         {
-            return filmes;
-        }
+            if (filme != null)
+            {
 
+
+                return Ok();
+            }
+
+            return NotFound("O filme não pode ser atualizado !");
+        }
     }
 }

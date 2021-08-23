@@ -12,8 +12,10 @@ namespace FilmesAPI.Interface
 
         void InsereFilme(Filme filme);
 
-        void RemoveFilme(int id);
+        void RemoveFilme(Guid id);
 
-        Filme RetornaFilme(int id);
+        List<Filme> RetornaFilme();
+
+        Filme RetornaFilmeId(Guid id);
     }
 }

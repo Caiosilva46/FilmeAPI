@@ -7,53 +7,114 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Http;
+using FilmesAPI.Repositorio;
+using FilmesAPI.Interface;
 
 namespace FilmesAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/filme")]
     public class FilmeController : ControllerBase
     {
         [HttpGet]
-        public IEnumerable<Filme> RecuperaFilmes()
+        [Route("recuperafilme")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<Filme>> RecuperaFilme()
         {
-            return null;
+            try
+            {
+                IServiceFilme.AlteraFilme();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         [HttpPost]
+        [Route("adicionafilme")]
         [ProducesResponseType(typeof(Filme), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult AdicionaFilme(Filme filme)
         {
-            if(filme != null)
+
+            try
+            {
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
+            
+            
+            
+            
+            
+            
+            /* if(filme != null)
             {
                 return CreatedAtAction("AdicionaFilme", filme);
             }
 
-            return BadRequest();
+            return BadRequest();*/
         }
         
         [HttpDelete("{id}")]
+        [Route("deletafilme")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public ActionResult DeletaFilmes (Guid id)
+        public ActionResult DeletaFilme (Guid id)
         {
-            if (id == null)
+            try
+            {
+                if (!string.IsNullOrEmpty(id))
+                {
+                    //ai  vc faz o select pra validar que existe.
+
+                    //o retorno do metodo valida que tem, ai faço o que deleta
+
+
+                }
+                else
+                {
+                    // alguma mensagem dizendo que ta errado
+                }
+                // Vou fazer um select para retornar filme por ID usando metodo FilmeID
+                //select id from Filme where
+
+
+            }
+            catch (Exception ex)
+            {
+            return null;
+            }
+           
+
+
+
+            /*if (id == null)
             {
                 return Ok("Filme excluido com sucesso !");
             }
 
-            return NotFound();
+            return NotFound();*/
+
         }
 
-
         [HttpPut("{id}")]
+        [Route("atualizafilme")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
         public ActionResult AtualizaFilme (Guid id, Filme filme)
         {
             if (filme != null)
             {
-
-
                 return Ok();
             }
 
@@ -61,3 +122,4 @@ namespace FilmesAPI.Controllers
         }
     }
 }
+

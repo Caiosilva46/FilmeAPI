@@ -10,16 +10,15 @@ namespace FilmesAPI.Models
 {
     public class Cliente
     {
-        
         public Guid Id { get; set; }
 
         [Required(ErrorMessage ="O nome do cliente é obrigatório")]
-        [StringLength(200, MinimumLength =3,ErrorMessage ="O nome não pode conter mais que 200 caracteres ou menos que 3 caracteres")]
+        [StringLength(200, MinimumLength = 1,ErrorMessage ="O nome não pode conter mais que 200 caracteres ou menos que 1 caracteres")]
         [RegularExpression(@"^[a-zA-Z''-'\s]{1,200}$",ErrorMessage ="O nome não pode conter números ou caractéres especiais")]
         public string Nome { get; set; }
 
         [Required(ErrorMessage ="O CPF é obrigatório")]
-        [StringLength(14,ErrorMessage ="O CPF não pode conter mais que 14 dígitos")]
+        [StringLength(11,ErrorMessage ="O CPF não pode conter mais que 14 dígitos")]
         [RegularExpression(@"(^[0-9]{3}[.][0-9]{3}[.][0-9]{3}[-][0-9]{2})$", ErrorMessage = "Esse CPF não é válido! Por favor, informe um CPF Válido")]
         public string CPF { get; set; }
 

@@ -8,7 +8,6 @@ namespace FilmesAPI.Models
 {
     public class Filme
     {
-        
         public Guid Id { get; set; }
 
         [Required(ErrorMessage ="O campo título é obrigatório")]
@@ -23,6 +22,7 @@ namespace FilmesAPI.Models
 
         [Required]
         [DataType(DataType.Date,ErrorMessage ="A data é obrigatória para o cadastro do produto")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage ="A data precisa ter 6 caracteres!")]
         [RegularExpression(@"^[0-9]{2}[/][0-9]{2}[/][0-9]{4}", ErrorMessage ="Inserir a data no padrão dd/mm/yy")]
         public string DataCadastro { get; set; }
 

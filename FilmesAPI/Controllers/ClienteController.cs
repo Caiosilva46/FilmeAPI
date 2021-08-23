@@ -7,23 +7,34 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Http;
+using FilmesAPI.Repositorio;
+using FilmesAPI.Interface;
 
 namespace FilmesAPI.Controllers
 {
 
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/cliente")]
     public class ClienteController : ControllerBase
     {
-
-
         [HttpGet]
-        public IEnumerable<Cliente> RecuperaCliente()
+        [Route("recuperacliente")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<IEnumerable<Cliente>> RecuperaCliente()
         {
-            return null;
+            var clientes = new Cliente[] { };
+
+            if (clientes == null)
+            {
+                return BadRequest("Não há clientes cadastrados !");
+            }
+
+            return Ok(clientes);
         }
 
         [HttpPost]
+        [Route("adicionacliente")]
         [ProducesResponseType(typeof(Cliente), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult AdicionaCliente(Cliente cliente)
@@ -37,7 +48,9 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-
+        [Route("deletacliente")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult DeletaCliente (Guid id)
         {
             if (id != null)
@@ -49,10 +62,11 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpPut("{id}")]
-
+        [Route("atualizacliente")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult AtualizaCliente (Guid id, Cliente cliente)
         {
-            
             if (cliente != null)
             {
                 return Ok("Cliente atualizado com sucesso !");
@@ -60,8 +74,5 @@ namespace FilmesAPI.Controllers
 
             return BadRequest("Cliente não pode ser atualizado");
         }
-
-
-
     }
 }

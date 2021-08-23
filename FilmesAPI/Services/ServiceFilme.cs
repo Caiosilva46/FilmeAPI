@@ -21,14 +21,19 @@ namespace FilmesAPI.Services
             rep.InsereFilme(filme);
         }
 
-        public void RemoveFilme(int id)
+        public void RemoveFilme(Guid id)
         {
-            rep.RemoveFilme(id);
+           rep.RemoveFilme(id);
         }
 
-        public Filme RetornaFilme(int id)
+        public List<Filme> RetornaFilme()
         {
-            throw new NotImplementedException();
+            return rep.RetornaFilme();
+        }
+
+        public Filme RetornaFilmeId(Guid id)
+        {
+            return rep.RetornaFilmeId(id);
         }
     }
 }

@@ -70,6 +70,9 @@
           "lib/netstandard2.0/K4os.Hash.xxHash.dll": {}
         }
       },
+      "Microsoft.AspNetCore.Mvc.Api.Analyzers/2.2.6": {
+        "type": "package"
+      },
       "Microsoft.CSharp/4.7.0": {
         "type": "package",
         "compile": {
@@ -802,6 +805,18 @@
         "lib/netstandard1.6/K4os.Hash.xxHash.xml",
         "lib/netstandard2.0/K4os.Hash.xxHash.dll",
         "lib/netstandard2.0/K4os.Hash.xxHash.xml"
+      ]
+    },
+    "Microsoft.AspNetCore.Mvc.Api.Analyzers/2.2.6": {
+      "sha512": "XvMvPlksyAtIk+wYzF6pcroVX8cxMkVqqv2Scheh+NzskS1JKXLU1myt2+X6Ia1XLMUtbxZY1hrYgZJy92fjqA==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.mvc.api.analyzers/2.2.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "analyzers/dotnet/cs/Microsoft.AspNetCore.Mvc.Api.Analyzers.dll",
+        "microsoft.aspnetcore.mvc.api.analyzers.2.2.6.nupkg.sha512",
+        "microsoft.aspnetcore.mvc.api.analyzers.nuspec"
       ]
     },
     "Microsoft.CSharp/4.7.0": {
@@ -2057,6 +2072,7 @@
   },
   "projectFileDependencyGroups": {
     "net5.0": [
+      "Microsoft.ASpNetCore.Mvc.Api.Analyzers >= 2.2.6",
       "Microsoft.EntityFrameworkCore.Tools >= 5.0.9",
       "MySql.EntityFrameworkCore >= 6.0.0-preview3",
       "Swashbuckle.AspNetCore >= 6.1.5",
@@ -2106,6 +2122,10 @@
       "net5.0": {
         "targetAlias": "net5.0",
         "dependencies": {
+          "Microsoft.ASpNetCore.Mvc.Api.Analyzers": {
+            "target": "Package",
+            "version": "[2.2.6, )"
+          },
           "Microsoft.EntityFrameworkCore.Tools": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",

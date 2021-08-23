@@ -12,8 +12,10 @@ namespace FilmesAPI.Interface
 
         void InsereCliente(Cliente cliente);
 
-        void RemoveCliente(int id);
+        void RemoveCliente(Guid id);
 
-        Cliente RetornaCliente(int id);
+        List<Cliente> RetornaCliente();
+
+        Cliente RetornaClienteId(Guid id);
     }
 }

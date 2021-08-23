@@ -21,14 +21,19 @@ namespace FilmesAPI.Services
             rep.InsereCliente(cliente);
         }
 
-        public void RemoveCliente(int id)
+        public void RemoveCliente(Guid id)
         {
             rep.RemoverCliente(id);
         }
 
-        public Cliente RetornaCliente(int id)
+        public Cliente RetornaClienteId(Guid id)
         {
-            return null;
+             return rep.RetornaClienteId(id);
+        }
+
+        public List<Cliente> RetornaCliente()
+        {
+            return rep.RetornaCliente();
         }
     }
 }

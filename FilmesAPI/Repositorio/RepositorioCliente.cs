@@ -11,11 +11,10 @@ namespace FilmesAPI.Repositorio
     public class RepositorioCliente : IRepositorioCliente
     {
         SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;User ID=root;Password=1304");
-      
-        //SqlDataReader dr = null;
+        SqlDataReader dr = null;
         public void AlteraCliente(Cliente cliente)
         {
-            string AtualizaCliente = $@"update Cliente set Nome,CPF,RG,Email,Senha where '{cliente.Nome}','{cliente.CPF}',{cliente.RG}',{cliente.Email}','{cliente.Senha}'";
+            string AtualizaCliente = $@"UPDATE Cliente SET Nome, CPF, RG, Email, Senha WHERE Id = {cliente.Id}";
             SqlCommand cmd = new SqlCommand(AtualizaCliente);
             cmd.Connection = conn;
             cmd.ExecuteNonQuery();
@@ -23,33 +22,32 @@ namespace FilmesAPI.Repositorio
 
         public void InsereCliente(Cliente cliente)
         {
-            string incluiCliente = $@"insert into Cliente (Nome, CPF, RG, Email, Senha) values ('{cliente.Nome}','{cliente.CPF}','{cliente.RG}', '{cliente.Email}', '{cliente.Senha}')";
+            string incluiCliente = $@"INSERT INTO Cliente (Nome, CPF, RG, Email, Senha) values ('{cliente.Nome}','{cliente.CPF}','{cliente.RG}', '{cliente.Email}', '{cliente.Senha}')";
             SqlCommand cmd = new SqlCommand(incluiCliente, conn);
             cmd.ExecuteNonQuery();
         }
 
-        public void RemoverCliente(int id)
+        public void RemoverCliente(Guid id)
         {
-            string excluiCliente = $@"delete from Cliente  where id == {id}";
+            string excluiCliente = $@"DELETE FROM Cliente WHERE id = {id}";
             SqlCommand cmd = new SqlCommand();
             cmd.CommandText = excluiCliente;
             cmd.Connection = conn;
             cmd.ExecuteNonQuery();
         }
 
-        public void RetornaCliente(int id)
+        public List<Cliente> RetornaCliente()
         {
-            SqlCommand cmd = new SqlCommand("select Id, Nome, CPF, RG, Email, Senha from Cliente", conn);
+            SqlCommand cmd = new SqlCommand("SELECT * FROM Cliente", conn);
             SqlDataReader dr = cmd.ExecuteReader();
+            return null;
         }
 
-
-        Cliente IRepositorioCliente.RetornaCliente(int id)
+        public Cliente RetornaClienteId(Guid id)
         {
             SqlCommand cmd = new SqlCommand("select Nome, CPF, RG, Email ,Senha from Cliente", conn);
             SqlDataReader dr = cmd.ExecuteReader();
             return null;
-
         }
     }
 }

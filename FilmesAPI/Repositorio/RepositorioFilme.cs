@@ -13,10 +13,10 @@ namespace FilmesAPI.Repositorio
     {
         SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;User ID=root;Password=1304");
 
-        //SqlDataReader dr = null;
+        SqlDataReader dr = null;
         public void AlteraFilme(Filme filme)
         {
-            string AtualizaFilme = $@"update Filme set Titulo, genero where '{filme.Titulo}', {filme.Genero} ";
+            string AtualizaFilme = $@"UPDATE Filme SET Titulo, Genero WHERE Id = {filme.Id} ";
             SqlCommand cmd = new SqlCommand(AtualizaFilme);
             cmd.Connection = conn;
             cmd.ExecuteNonQuery();
@@ -24,29 +24,32 @@ namespace FilmesAPI.Repositorio
 
         public void InsereFilme(Filme filme)
         {
-            string IncluiFilme = $@"insert into Filme (Titulo, Genero, DataCadastro) values ('{filme.Titulo}', '{filme.Genero}', '{filme.DataCadastro}')";
+            string IncluiFilme = $@"INSERT INTO Filme (Titulo, Genero, DataCadastro) VALUES ('{filme.Titulo}', '{filme.Genero}', '{filme.DataCadastro}')";
             SqlCommand cmd = new SqlCommand(IncluiFilme, conn);
             cmd.ExecuteNonQuery();
         }
 
-        public void RemoveFilme(int id)
+        public void RemoveFilme(Guid id)
         {
-            string excluiFilme = $@"delete from Filme where id == {id}";
+            string excluiFilme = $@"DELETE FROM Filme WHERE id = {id}";
             SqlCommand cmd = new SqlCommand();
             cmd.CommandText = excluiFilme;
             cmd.Connection = conn;
             cmd.ExecuteNonQuery();
         }
 
-        public void RetornaFilme(int id)
+        public List<Filme> RetornaFilme()
         {
-            SqlCommand cmd = new SqlCommand("select Id,Titulo, Genero, Datacadastro from Filme", conn);
+            SqlCommand cmd = new SqlCommand("SELECT * FROM Filme", conn);
             SqlDataReader dr = cmd.ExecuteReader();
+            return Filme;
         }
 
-        Filme IRepositorioFilme.RetornaFilme(int id)
+        public Filme RetornaFilmeId(Guid id)
         {
-            throw new NotImplementedException();
+            SqlCommand cmd = new SqlCommand($"SELECT id FROM Filme WHERE id = '{id}' ", conn);
+            SqlDataReader dr = cmd.ExecuteReader();
+            return id;
         }
     }
 }

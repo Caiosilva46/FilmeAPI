@@ -11,45 +11,145 @@ namespace FilmesAPI.Repositorio
 
     public class RepositorioFilme : IRepositorioFilme
     {
-        SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;User ID=root;Password=1304");
 
         SqlDataReader dr = null;
         public void AlteraFilme(Filme filme)
         {
-            string AtualizaFilme = $@"UPDATE Filme SET Titulo, Genero WHERE Id = {filme.Id} ";
-            SqlCommand cmd = new SqlCommand(AtualizaFilme);
-            cmd.Connection = conn;
-            cmd.ExecuteNonQuery();
+            SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;Integrated Security=SSPI");
+
+            try
+            {
+                conn.Open();
+                string AtualizaFilme = @"UPDATE Filme SET Titulo = @Titulo, Genero = @Genero WHERE Id = @Id";
+                SqlCommand cmd = new SqlCommand(AtualizaFilme, conn);
+                cmd.Parameters.AddWithValue("@Titulo", filme.Titulo);
+                cmd.Parameters.AddWithValue("@Genero", filme.Genero);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw ex; // retorna mensagem de erro
+            }
+
+            finally
+            {
+                conn.Close();
+            }
         }
 
         public void InsereFilme(Filme filme)
         {
-            string IncluiFilme = $@"INSERT INTO Filme (Titulo, Genero, DataCadastro) VALUES ('{filme.Titulo}', '{filme.Genero}', '{filme.DataCadastro}')";
-            SqlCommand cmd = new SqlCommand(IncluiFilme, conn);
-            cmd.ExecuteNonQuery();
+            SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;Integrated Security=SSPI");
+
+            try 
+            {
+                conn.Open();
+                string InsereFilme = @"INSERT INTO Filme (Titulo, Genero, DataCadastro) VALEUS (@Titulo, @Genero, @DataCadastro)";
+                SqlCommand cmd = new SqlCommand(InsereFilme, conn);
+                cmd.Parameters.AddWithValue("@Titulo", filme.Titulo);
+                cmd.Parameters.AddWithValue("@Genero", filme.Genero);
+                cmd.Parameters.AddWithValue("@DataCadastro", filme.DataCadastro);
+                cmd.ExecuteNonQuery();
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;  // retorna mensagem de erro
+            }
+
+            finally
+            {
+                conn.Close();
+            }
         }
 
         public void RemoveFilme(Guid id)
         {
-            string excluiFilme = $@"DELETE FROM Filme WHERE id = {id}";
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandText = excluiFilme;
-            cmd.Connection = conn;
-            cmd.ExecuteNonQuery();
+            SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;Integrated Security=SSPI");
+
+
+            try
+            {
+                conn.Open();
+                string RemoveFilme = @"DELETE  FROM Filme WHERE Id = @id";
+                SqlCommand cmd = new SqlCommand(RemoveFilme, conn);
+                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.ExecuteNonQuery();
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;  // retorna mensagem de erro
+            }
+
+            finally
+            {
+                conn.Close();
+            }
         }
 
         public List<Filme> RetornaFilme()
         {
-            SqlCommand cmd = new SqlCommand("SELECT * FROM Filme", conn);
-            SqlDataReader dr = cmd.ExecuteReader();
-            return Filme;
+            SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;Integrated Security=SSPI");
+            Filme filme = null;
+            List<Filme> ListFilme = new List<Filme>();
+            
+
+            try
+            {
+                conn.Open();
+                string retornaFilme = @$"SELECT * FROM Filme";
+                SqlCommand cmd = new SqlCommand(retornaFilme, conn);
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    filme = new Filme();
+                    filme.Titulo = dr["Titulo"].ToString();
+                    filme.Genero = dr["Genero"].ToString();
+                    filme.DataCadastro = dr["DataCadastro"].ToString();
+                    filme.Id = Guid.Parse(dr["Id"].ToString());
+                    ListFilme.Add(filme);
+                }
+            }
+            finally
+            {
+                if (dr != null)
+                {
+                    dr.Close();
+                }
+                else if (conn != null)
+                {
+                    conn.Close();
+                }
+            }
+            return ListFilme;
         }
 
         public Filme RetornaFilmeId(Guid id)
         {
-            SqlCommand cmd = new SqlCommand($"SELECT id FROM Filme WHERE id = '{id}' ", conn);
-            SqlDataReader dr = cmd.ExecuteReader();
-            return id;
+            SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;Integrated Security=SSPI");
+
+            try
+            {
+                conn.Open();
+                string RetornaFilmeId = @"SELECT Id FROM Filme WHERE Id = @Id";
+                SqlCommand cmd = new SqlCommand(RetornaFilmeId, conn);
+                SqlDataReader dr = cmd.ExecuteReader();
+                return null;
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;  // retorna mensagem de erro
+            }
+
+            finally
+            {
+                conn.Close();
+            }
+
         }
     }
 }
+

@@ -17,62 +17,57 @@ namespace FilmesAPI.Controllers
     [Route("api/cliente")]
     public class ClienteController : ControllerBase
     {
+
+        public readonly IServiceCliente serviCli;
+
+        public ClienteController(IServiceCliente service)
+        {
+            serviCli = service;
+        }
+
         [HttpGet]
         [Route("recuperacliente")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<IEnumerable<Cliente>> RecuperaCliente()
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IEnumerable<Cliente> RecuperaCliente()
         {
-            var clientes = new Cliente[] { };
+            return serviCli.RetornaCliente();
+        }
 
-            if (clientes == null)
-            {
-                return BadRequest("Não há clientes cadastrados !");
-            }
-
-            return Ok(clientes);
+        [HttpGet("{id}")]
+        [Route("recuperaclienteid")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public Cliente RecuperaClienteId(Guid id)
+        {
+            return serviCli.RetornaClienteId(id);
         }
 
         [HttpPost]
         [Route("adicionacliente")]
-        [ProducesResponseType(typeof(Cliente), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult AdicionaCliente(Cliente cliente)
+        //[ProducesResponseType(typeof(Cliente), StatusCodes.Status201Created)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public void AdicionaCliente(Cliente cliente)
         {
-            if (cliente != null)
-            {
-                return CreatedAtAction("AdicionaCliente", cliente);
-            }
-
-            return BadRequest();
+             serviCli.InsereCliente(cliente); 
         }
 
         [HttpDelete("{id}")]
         [Route("deletacliente")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult DeletaCliente (Guid id)
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        public void DeletaCliente (Guid id)
         {
-            if (id != null)
-            {
-                return Ok("Cliente excluido com sucesso ! ");
-            }
-
-            return BadRequest("Cliente não localizado !");
+             serviCli.RemoveCliente(id);       
         }
 
         [HttpPut("{id}")]
         [Route("atualizacliente")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult AtualizaCliente (Guid id, Cliente cliente)
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        public void AtualizaCliente (Cliente cliente)
         {
-            if (cliente != null)
-            {
-                return Ok("Cliente atualizado com sucesso !");
-            }
-
-            return BadRequest("Cliente não pode ser atualizado");
+             serviCli.AlteraCliente(cliente);
         }
     }
 }

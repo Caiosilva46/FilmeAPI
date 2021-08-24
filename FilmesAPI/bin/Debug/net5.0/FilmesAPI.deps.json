@@ -33,6 +33,7 @@
     ".NETCoreApp,Version=v5.0": {
       "FilmesAPI/1.0.0": {
         "dependencies": {
+          "Microsoft.AspNetCore.Mvc.Api.Analyzers": "2.2.6",
           "Microsoft.EntityFrameworkCore.Tools": "5.0.9",
           "MySql.EntityFrameworkCore": "6.0.0-preview3",
           "Swashbuckle.AspNetCore": "6.1.5",
@@ -392,6 +393,7 @@
           "lib/netstandard2.0/K4os.Hash.xxHash.dll": {}
         }
       },
+      "Microsoft.AspNetCore.Mvc.Api.Analyzers/2.2.6": {},
       "Microsoft.CSharp/4.7.0": {},
       "Microsoft.EntityFrameworkCore/6.0.0-preview.3.21201.2": {
         "dependencies": {
@@ -2550,6 +2552,13 @@
       "sha512": "sha512-jCfNP0inx1sGcP3KSbpiDEH3km2e1sVBjMfKo+V92jr1dL4ZYgA1uhRMl1wAtdGZcbObXIikKqtVlgx3j/CW6g==",
       "path": "k4os.hash.xxhash/1.0.6",
       "hashPath": "k4os.hash.xxhash.1.0.6.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Mvc.Api.Analyzers/2.2.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XvMvPlksyAtIk+wYzF6pcroVX8cxMkVqqv2Scheh+NzskS1JKXLU1myt2+X6Ia1XLMUtbxZY1hrYgZJy92fjqA==",
+      "path": "microsoft.aspnetcore.mvc.api.analyzers/2.2.6",
+      "hashPath": "microsoft.aspnetcore.mvc.api.analyzers.2.2.6.nupkg.sha512"
     },
     "Microsoft.CSharp/4.7.0": {
       "type": "package",

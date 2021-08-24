@@ -10,44 +10,152 @@ namespace FilmesAPI.Repositorio
 {
     public class RepositorioCliente : IRepositorioCliente
     {
-        SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;User ID=root;Password=1304");
         SqlDataReader dr = null;
         public void AlteraCliente(Cliente cliente)
         {
-            string AtualizaCliente = $@"UPDATE Cliente SET Nome, CPF, RG, Email, Senha WHERE Id = {cliente.Id}";
-            SqlCommand cmd = new SqlCommand(AtualizaCliente);
-            cmd.Connection = conn;
-            cmd.ExecuteNonQuery();
+            SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;Integrated Security=SSPI");
+
+            try 
+            {
+                conn.Open();
+                string AtualizaCliente = @"UPDATE Cliente SET Nome = @Nome, CPF = @CPF, RG = @RG, Email = @Email, Senha = @Senha WHERE Id = @Id";
+                SqlCommand cmd = new SqlCommand(AtualizaCliente, conn);
+                cmd.Parameters.AddWithValue("@Nome", cliente.Nome);
+                cmd.Parameters.AddWithValue("@CPF", cliente.CPF);
+                cmd.Parameters.AddWithValue("@RG", cliente.RG);
+                cmd.Parameters.AddWithValue("@Email", cliente.Email);
+                cmd.Parameters.AddWithValue("@Senha", cliente.Senha);
+                cmd.ExecuteNonQuery();
+            }
+
+            catch (Exception ex)
+            {
+                throw ex; // retorna mensagem de erro
+            }
+
+            finally
+            {
+                conn.Close();
+            }
+
         }
 
         public void InsereCliente(Cliente cliente)
         {
-            string incluiCliente = $@"INSERT INTO Cliente (Nome, CPF, RG, Email, Senha) values ('{cliente.Nome}','{cliente.CPF}','{cliente.RG}', '{cliente.Email}', '{cliente.Senha}')";
-            SqlCommand cmd = new SqlCommand(incluiCliente, conn);
-            cmd.ExecuteNonQuery();
+            SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;Integrated Security=SSPI");
+
+            try 
+            {
+                conn.Open();
+                string InsereCliente = @"INSERT INTO Cliente (Nome, CPF, RG, Email, Senha) VALEUS (@Nome, @CPF, @RG, @Email, @Senha)";
+                SqlCommand cmd = new SqlCommand(InsereCliente, conn);
+                cmd.Parameters.AddWithValue("@Nome", cliente.Nome);
+                cmd.Parameters.AddWithValue("@CPF", cliente.CPF); 
+                cmd.Parameters.AddWithValue("@RG", cliente.RG);
+                cmd.Parameters.AddWithValue("@Email", cliente.Email);
+                cmd.Parameters.AddWithValue("@Senha", cliente.Senha);
+                cmd.ExecuteNonQuery();
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;  // retorna mensagem de erro
+            }
+
+            finally
+            {
+                conn.Close();
+            }
         }
 
-        public void RemoverCliente(Guid id)
+        public void RemoveCliente(Guid id)
         {
-            string excluiCliente = $@"DELETE FROM Cliente WHERE id = {id}";
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandText = excluiCliente;
-            cmd.Connection = conn;
-            cmd.ExecuteNonQuery();
+            SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;Integrated Security=SSPI");
+
+            try 
+            {
+                conn.Open();
+                string RemoveCliente =  @"DELETE  FROM Cliente WHERE Id = @id";
+                SqlCommand cmd = new SqlCommand(RemoveCliente, conn);
+                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.ExecuteNonQuery();
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;  // retorna mensagem de erro
+            }
+
+            finally
+            {
+                conn.Close();
+            }
         }
 
         public List<Cliente> RetornaCliente()
         {
-            SqlCommand cmd = new SqlCommand("SELECT * FROM Cliente", conn);
-            SqlDataReader dr = cmd.ExecuteReader();
-            return null;
+            SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;Integrated Security=SSPI");
+
+            Cliente cliente = null;
+            List<Cliente> ListCliente = new List<Cliente>();
+
+            try
+            {
+                conn.Open();
+                string retornaCliente = @$"SELECT * FROM Filme";
+                SqlCommand cmd = new SqlCommand(retornaCliente, conn);
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    cliente = new Cliente();
+                    cliente.Nome = dr["Nome"].ToString();
+                    cliente.CPF = dr["CPF"].ToString();
+                    cliente.RG = dr["RG"].ToString();
+                    cliente.Email = dr["Email"].ToString();
+                    cliente.Senha = dr["Senha"].ToString();
+                    cliente.Id = Guid.Parse(dr["Id"].ToString());
+                    ListCliente.Add(cliente);
+                }
+            }
+            
+            finally
+            {
+                if (dr != null)
+                {
+                    dr.Close();
+                }
+                else if (conn != null)
+                {
+                    conn.Close();
+                }
+            }
+            return ListCliente;
         }
 
         public Cliente RetornaClienteId(Guid id)
         {
-            SqlCommand cmd = new SqlCommand("select Nome, CPF, RG, Email ,Senha from Cliente", conn);
-            SqlDataReader dr = cmd.ExecuteReader();
-            return null;
+            SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;Integrated Security=SSPI");
+
+            try
+            {
+                conn.Open();
+                string RetornaClienteId = @"SELECT Id FROM Cliente WHERE Id = @Id";
+                SqlCommand cmd = new SqlCommand(RetornaClienteId, conn);
+                SqlDataReader dr = cmd.ExecuteReader();
+                return null;
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;  // retorna mensagem de erro
+            }
+
+            finally
+            {
+                conn.Close();
+            }
         }
     }
 }
+

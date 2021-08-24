@@ -14,111 +14,59 @@ namespace FilmesAPI.Controllers
 {
     [ApiController]
     [Route("api/filme")]
+
     public class FilmeController : ControllerBase
     {
+        public readonly IServiceFilme serviFilme;
+
+        public FilmeController(IServiceFilme service)
+        {
+            serviFilme = service;
+        }
+
         [HttpGet]
         [Route("recuperafilme")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<Filme>> RecuperaFilme()
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        public IEnumerable<Filme> RecuperaFilme()
         {
-            try
-            {
-                IServiceFilme.AlteraFilme();
-            }
-            catch (Exception)
-            {
+            return serviFilme.RetornaFilme();
+        }
 
-                throw;
-            }
+        [HttpGet("{id}")]
+        [Route("recuperafilme")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        public Filme RecuperaFilme(Guid id)
+        {
+            return serviFilme.RetornaFilmeId(id);
         }
 
         [HttpPost]
         [Route("adicionafilme")]
-        [ProducesResponseType(typeof(Filme), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult AdicionaFilme(Filme filme)
+        //[ProducesResponseType(typeof(Filme), StatusCodes.Status201Created)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public void AdicionaFilme(Filme filme)
         {
-
-            try
-            {
-
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            
-            
-            
-            
-            
-            
-            
-            /* if(filme != null)
-            {
-                return CreatedAtAction("AdicionaFilme", filme);
-            }
-
-            return BadRequest();*/
+            serviFilme.InsereFilme(filme);
         }
         
         [HttpDelete("{id}")]
         [Route("deletafilme")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public ActionResult DeletaFilme (Guid id)
+        public void DeletaFilme (Guid id)
         {
-            try
-            {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    //ai  vc faz o select pra validar que existe.
-
-                    //o retorno do metodo valida que tem, ai faço o que deleta
-
-
-                }
-                else
-                {
-                    // alguma mensagem dizendo que ta errado
-                }
-                // Vou fazer um select para retornar filme por ID usando metodo FilmeID
-                //select id from Filme where
-
-
-            }
-            catch (Exception ex)
-            {
-            return null;
-            }
-           
-
-
-
-            /*if (id == null)
-            {
-                return Ok("Filme excluido com sucesso !");
-            }
-
-            return NotFound();*/
-
+            serviFilme.RemoveFilme(id);
         }
 
         [HttpPut("{id}")]
         [Route("atualizafilme")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public ActionResult AtualizaFilme (Guid id, Filme filme)
+        public void AtualizaFilme (Filme filme)
         {
-            if (filme != null)
-            {
-                return Ok();
-            }
-
-            return NotFound("O filme não pode ser atualizado !");
+            serviFilme.AlteraFilme(filme);
         }
     }
 }

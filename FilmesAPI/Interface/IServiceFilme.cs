@@ -8,14 +8,14 @@ namespace FilmesAPI.Interface
 {
     public interface IServiceFilme
     {
-        void AlteraFilme(Filme filme);
+        void AtualizaFilme(Filme filme);
 
-        void InsereFilme(Filme filme);
+        void AdicionaFilme(Filme filme);
 
-        void RemoveFilme(Guid id);
+        void RemoveFilme(int id);
 
         List<Filme> RetornaFilme();
 
-        Filme RetornaFilmeId(Guid id);
+        Filme RetornaFilmeId(int id);
     }
 }

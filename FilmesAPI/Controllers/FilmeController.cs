@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using Microsoft.AspNetCore.Http;
 using FilmesAPI.Repositorio;
 using FilmesAPI.Interface;
+using FilmesAPI.Services;
 
 namespace FilmesAPI.Controllers
 {
@@ -17,56 +18,46 @@ namespace FilmesAPI.Controllers
 
     public class FilmeController : ControllerBase
     {
-        public readonly IServiceFilme serviFilme;
+        public readonly ServiceFilme _serviceFilme = new ServiceFilme();
 
-        public FilmeController(IServiceFilme service)
-        {
-            serviFilme = service;
-        }
-
-        [HttpGet]
-        [Route("recuperafilme")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpGet("recuperafilme")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IEnumerable<Filme> RecuperaFilme()
         {
-            return serviFilme.RetornaFilme();
+            return _serviceFilme.RetornaFilme();
         }
 
-        [HttpGet("{id}")]
-        [Route("recuperafilme")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        public Filme RecuperaFilme(Guid id)
+        [HttpGet("recuperafilmeid/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public Filme RecuperaFilmeId(int id)
         {
-            return serviFilme.RetornaFilmeId(id);
+            return _serviceFilme.RetornaFilmeId(id);
         }
 
-        [HttpPost]
-        [Route("adicionafilme")]
-        //[ProducesResponseType(typeof(Filme), StatusCodes.Status201Created)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public void AdicionaFilme(Filme filme)
+        [HttpPost("adicionafilme")]
+        [ProducesResponseType(typeof(Filme), StatusCodes.Status201Created)]
+        public ActionResult AdicionaFilme(Filme filme)
         {
-            serviFilme.InsereFilme(filme);
+            _serviceFilme.AdicionaFilme(filme);
+            return CreatedAtAction("adicionafilme", filme);
         }
         
-        [HttpDelete("{id}")]
-        [Route("deletafilme")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpDelete("deletafilme/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
 
-        public void DeletaFilme (Guid id)
+        public ActionResult DeletaFilme (int id)
         {
-            serviFilme.RemoveFilme(id);
+            _serviceFilme.RemoveFilme(id);
+            return Ok("Item deletado com sucesso!");
         }
 
-        [HttpPut("{id}")]
-        [Route("atualizafilme")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPut("atualizafilme/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
 
-        public void AtualizaFilme (Filme filme)
+        public ActionResult AtualizaFilme (Filme filme)
         {
-            serviFilme.AlteraFilme(filme);
+            _serviceFilme.AtualizaFilme(filme);
+            return Ok("Filme atualizado com sucesso !");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FilmesAPI.Models;
+using FilmesAPI.Models.ValueObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +9,24 @@ namespace FilmesAPI.Interface
 {
     public interface IServiceCliente
     {
-        void AlteraCliente(Cliente cliente);
+        //PUT
+        void AtualizaCliente(Cliente cliente);
 
-        void InsereCliente(Cliente cliente);
+        //POST
+        void AdicionaCliente(Cliente cliente);
 
-        void RemoveCliente(Guid id);
+        //DELETE
+        void RemoveCliente(int id);
 
+        //GET
         List<Cliente> RetornaCliente();
 
-        Cliente RetornaClienteId(Guid id);
+        //GETID
+        Cliente RetornaClienteId(int id);
+
+        //GET 
+        void CpfCadastrado(CPF cpf);
+
+        
     }
 }

@@ -13,17 +13,20 @@ namespace FilmesAPI.Repositorio
     {
 
         SqlDataReader dr = null;
-        public void AlteraFilme(Filme filme)
+        public void AtualizaFilme(Filme filme)
         {
-            SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;Integrated Security=SSPI");
 
+            SqlConnection conn = new SqlConnection(@"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             try
             {
                 conn.Open();
-                string AtualizaFilme = @"UPDATE Filme SET Titulo = @Titulo, Genero = @Genero WHERE Id = @Id";
+                string AtualizaFilme = @"UPDATE filme SET Titulo = @Titulo, Genero = @Genero, DataCadastro = @DataCadastro  WHERE FilmeId = @FilmeId";
                 SqlCommand cmd = new SqlCommand(AtualizaFilme, conn);
+                cmd.Parameters.AddWithValue("@FilmeID", filme.FilmeId);
                 cmd.Parameters.AddWithValue("@Titulo", filme.Titulo);
                 cmd.Parameters.AddWithValue("@Genero", filme.Genero);
+                cmd.Parameters.AddWithValue("@DataCadastro", filme.DataCadastro);
+
                 cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
@@ -37,15 +40,17 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public void InsereFilme(Filme filme)
+        public void AdicionaFilme(Filme filme)
         {
-            SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;Integrated Security=SSPI");
 
-            try 
+            SqlConnection conn = new SqlConnection(@"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+
+            try
             {
                 conn.Open();
-                string InsereFilme = @"INSERT INTO Filme (Titulo, Genero, DataCadastro) VALEUS (@Titulo, @Genero, @DataCadastro)";
-                SqlCommand cmd = new SqlCommand(InsereFilme, conn);
+                string AdicionaFilme = @"INSERT INTO filme (FilmeId, Titulo, Genero, DataCadastro) VALUES (@FilmeId, @Titulo, @Genero, @DataCadastro)";
+                SqlCommand cmd = new SqlCommand(AdicionaFilme, conn);
+                cmd.Parameters.AddWithValue("@FilmeId", filme.FilmeId);
                 cmd.Parameters.AddWithValue("@Titulo", filme.Titulo);
                 cmd.Parameters.AddWithValue("@Genero", filme.Genero);
                 cmd.Parameters.AddWithValue("@DataCadastro", filme.DataCadastro);
@@ -63,17 +68,17 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public void RemoveFilme(Guid id)
+        public void RemoveFilme(int id)
         {
-            SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;Integrated Security=SSPI");
 
+            SqlConnection conn = new SqlConnection(@"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
 
             try
             {
                 conn.Open();
-                string RemoveFilme = @"DELETE  FROM Filme WHERE Id = @id";
+                string RemoveFilme = @"DELETE  FROM filme WHERE FilmeId = @FilmeId";
                 SqlCommand cmd = new SqlCommand(RemoveFilme, conn);
-                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@FilmeId", id);
                 cmd.ExecuteNonQuery();
             }
 
@@ -90,7 +95,8 @@ namespace FilmesAPI.Repositorio
 
         public List<Filme> RetornaFilme()
         {
-            SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;Integrated Security=SSPI");
+
+            SqlConnection conn = new SqlConnection(@"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             Filme filme = null;
             List<Filme> ListFilme = new List<Filme>();
             
@@ -98,7 +104,7 @@ namespace FilmesAPI.Repositorio
             try
             {
                 conn.Open();
-                string retornaFilme = @$"SELECT * FROM Filme";
+                string retornaFilme = @$"SELECT * FROM filme";
                 SqlCommand cmd = new SqlCommand(retornaFilme, conn);
                 SqlDataReader dr = cmd.ExecuteReader();
 
@@ -108,7 +114,7 @@ namespace FilmesAPI.Repositorio
                     filme.Titulo = dr["Titulo"].ToString();
                     filme.Genero = dr["Genero"].ToString();
                     filme.DataCadastro = dr["DataCadastro"].ToString();
-                    filme.Id = Guid.Parse(dr["Id"].ToString());
+                    filme.FilmeId = Convert.ToInt32(dr["FilmeId"].ToString());
                     ListFilme.Add(filme);
                 }
             }
@@ -126,17 +132,27 @@ namespace FilmesAPI.Repositorio
             return ListFilme;
         }
 
-        public Filme RetornaFilmeId(Guid id)
+        public Filme RetornaFilmeId(int id)
         {
-            SqlConnection conn = new SqlConnection("Data Source=localhost;Initial Catalog=everis;Integrated Security=SSPI");
+
+            SqlConnection conn = new SqlConnection(@"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            Filme filme = null;
 
             try
             {
                 conn.Open();
-                string RetornaFilmeId = @"SELECT Id FROM Filme WHERE Id = @Id";
+                string RetornaFilmeId = @"SELECT * FROM Filme WHERE FilmeId = " + id;
                 SqlCommand cmd = new SqlCommand(RetornaFilmeId, conn);
                 SqlDataReader dr = cmd.ExecuteReader();
-                return null;
+
+                while (dr.Read())
+                {
+                    filme = new Filme();
+                    filme.FilmeId = Convert.ToInt32(dr["FilmeId"]);
+                    filme.Titulo = dr["Titulo"].ToString();
+                    filme.Genero = dr["Genero"].ToString();
+                    filme.DataCadastro = dr["DataCadastro"].ToString();
+                }
             }
 
             catch (Exception ex)
@@ -146,8 +162,16 @@ namespace FilmesAPI.Repositorio
 
             finally
             {
-                conn.Close();
+                if (dr != null)
+                {
+                    dr.Close();
+                }
+                else if (conn != null)
+                {
+                    conn.Close();
+                }
             }
+            return filme;
 
         }
     }

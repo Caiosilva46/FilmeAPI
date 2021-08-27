@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using Microsoft.AspNetCore.Http;
 using FilmesAPI.Repositorio;
 using FilmesAPI.Interface;
+using FilmesAPI.Services;
 
 namespace FilmesAPI.Controllers
 {
@@ -18,56 +19,52 @@ namespace FilmesAPI.Controllers
     public class ClienteController : ControllerBase
     {
 
-        public readonly IServiceCliente serviCli;
+        public readonly ServiceCliente _serviceCli = new ServiceCliente();
 
-        public ClienteController(IServiceCliente service)
-        {
-            serviCli = service;
-        }
-
-        [HttpGet]
-        [Route("recuperacliente")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpGet("recuperacliente")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IEnumerable<Cliente> RecuperaCliente()
         {
-            return serviCli.RetornaCliente();
+            return _serviceCli.RetornaCliente();
         }
 
-        [HttpGet("{id}")]
-        [Route("recuperaclienteid")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public Cliente RecuperaClienteId(Guid id)
+        [HttpGet("recuperaclienteid/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public Cliente RecuperaClienteId(int id)
         {
-            return serviCli.RetornaClienteId(id);
+            return _serviceCli.RetornaClienteId(id);            
         }
 
-        [HttpPost]
-        [Route("adicionacliente")]
-        //[ProducesResponseType(typeof(Cliente), StatusCodes.Status201Created)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public void AdicionaCliente(Cliente cliente)
+        [HttpPost("adicionacliente")]
+        [ProducesResponseType(typeof(Cliente), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult AdicionaCliente(Cliente cliente)
         {
-             serviCli.InsereCliente(cliente); 
+
+            if(_serviceCli.CpfCadastrado(cliente.Cpf))
+            
+                throw new Exception("CPF Já cadastrao para outro cliente !");
+            
+            _serviceCli.AdicionaCliente(cliente);
+            return CreatedAtAction("", cliente);
+
         }
 
-        [HttpDelete("{id}")]
-        [Route("deletacliente")]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        public void DeletaCliente (Guid id)
+        [HttpDelete("deletacliente/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult DeletaCliente (int id)
         {
-             serviCli.RemoveCliente(id);       
+            _serviceCli.RemoveCliente(id);
+            return Ok("Cliente excluido com sucesso !");
         }
 
-        [HttpPut("{id}")]
-        [Route("atualizacliente")]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        public void AtualizaCliente (Cliente cliente)
+        [HttpPut("atualizacliente/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult AtualizaCliente (Cliente cliente)
         {
-             serviCli.AlteraCliente(cliente);
+            _serviceCli.AtualizaCliente(cliente);
+            return Ok("Cliente atualizado com sucesso !");
         }
+
     }
 }

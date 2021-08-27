@@ -11,17 +11,17 @@ namespace FilmesAPI.Services
     public class ServiceFilme : IServiceFilme
     {
         private readonly RepositorioFilme rep = new RepositorioFilme();
-        public void AlteraFilme(Filme filme)
+        public void AtualizaFilme(Filme filme)
         {
-            rep.AlteraFilme(filme);
+            rep.AtualizaFilme(filme);
         }
 
-        public void InsereFilme(Filme filme)
+        public void AdicionaFilme(Filme filme)
         {
-            rep.InsereFilme(filme);
+            rep.AdicionaFilme(filme);
         }
 
-        public void RemoveFilme(Guid id)
+        public void RemoveFilme(int id)
         {
            rep.RemoveFilme(id);
         }
@@ -31,7 +31,7 @@ namespace FilmesAPI.Services
             return rep.RetornaFilme();
         }
 
-        public Filme RetornaFilmeId(Guid id)
+        public Filme RetornaFilmeId(int id)
         {
             return rep.RetornaFilmeId(id);
         }

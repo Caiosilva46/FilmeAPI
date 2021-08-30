@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 
 namespace FilmesAPI.Repositorio
 {
-
-    public class RepositorioFilme : IRepositorioFilme
+    public class RepositorioLocacao : IRepositorioLocacao
     {
+
         string connectionString = @"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
         SqlDataReader dataRead = null;
-        public void AtualizaFilme(Filme filme)
+
+        public void AtualizaLocacao(Locacao locacao)
         {
-            string queryString = @"UPDATE filme SET Titulo = @Titulo, Genero = @Genero, DataCadastro = @DataCadastro  WHERE FilmeId = @FilmeId";
+            string queryString = @"UPDATE Locacao SET Titulo = @Titulo, Valor = @Valor, DataRetirada = @DataRetirada, DataDevolucao = @DataDevolucao WHERE LocacaoId = @LocacaoId=Id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -24,15 +25,17 @@ namespace FilmesAPI.Repositorio
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
-                    command.Parameters.AddWithValue("@FilmeID", filme.FilmeId);
-                    command.Parameters.AddWithValue("@Titulo", filme.Titulo);
-                    command.Parameters.AddWithValue("@Genero", filme.Genero);
-                    command.Parameters.AddWithValue("@DataCadastro", DateTime.Now.ToShortDateString());
+                    command.Parameters.AddWithValue("@LocacaoId", locacao.LocacaoId);
+                    command.Parameters.AddWithValue("@Titulo", locacao.Titulo);
+                    command.Parameters.AddWithValue("@Valor", locacao.Valor);
+                    command.Parameters.AddWithValue("@DataRetirada", DateTime.Now.ToShortDateString());
+                    command.Parameters.AddWithValue("@DataDevolucao", DateTime.Now.ToShortDateString());
                     command.ExecuteNonQuery();
                 }
+
                 catch (Exception ex)
                 {
-                    throw ex; // retorna mensagem de erro
+                    throw ex;
                 }
 
                 finally
@@ -42,10 +45,9 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public void AdicionaFilme(Filme filme)
+        public void AdicionaLocacao(Locacao locacao)
         {
-
-            string queryString = @"INSERT INTO filme (FilmeId, Titulo, Genero, DataCadastro) VALUES (@FilmeId, @Titulo, @Genero, @DataCadastro)";
+            string queryString = @"INSERT INTO locacao (LocacaoId, Titulo, Valor, DataRetirada, DataDevolucao) VALUES (@LocacaoId, @Titulo, @Valor, @DataRetirada, @DataDevolucao)";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -53,18 +55,18 @@ namespace FilmesAPI.Repositorio
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
-                    command.Parameters.AddWithValue("@FilmeId", filme.FilmeId);
-                    command.Parameters.AddWithValue("@Titulo", filme.Titulo);
-                    command.Parameters.AddWithValue("@Genero", filme.Genero);
-                    command.Parameters.AddWithValue("@DataCadastro",  DateTime.Now.ToShortDateString());
+                    command.Parameters.AddWithValue("@LocacaoId", locacao.LocacaoId);
+                    command.Parameters.AddWithValue("@Titulo", locacao.Titulo);
+                    command.Parameters.AddWithValue("@Valor", locacao.Valor);
+                    command.Parameters.AddWithValue("@DataRetirada", DateTime.Now.ToShortDateString());
+                    command.Parameters.AddWithValue("@DataDevolucao", DateTime.Now.ToShortDateString());
                     command.ExecuteNonQuery();
                 }
-
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;  // retorna mensagem de erro
-                }
 
+                    throw;
+                }
                 finally
                 {
                     connection.Close();
@@ -72,9 +74,9 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public void RemoveFilme(int id)
+        public void RemoveLocacao(int id)
         {
-            string queryString = @"DELETE  FROM filme WHERE FilmeId = @FilmeId";
+            string queryString = @"DELETE FROM locacao WHERE LocacaoId = @LocacaoId";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -82,15 +84,13 @@ namespace FilmesAPI.Repositorio
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
-                    command.Parameters.AddWithValue("@FilmeId", id);
+                    command.Parameters.AddWithValue("@LocacaoId", id);
                     command.ExecuteNonQuery();
                 }
-
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;  // retorna mensagem de erro
+                    throw;
                 }
-
                 finally
                 {
                     connection.Close();
@@ -98,54 +98,11 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public List<Filme> RetornaFilme()
+        public List<Locacao> RetornaLocacao()
         {
-
-            string queryString = @$"SELECT * FROM filme";
-            Filme filme;
-            List<Filme> ListFilme = new List<Filme>();
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-
-                try
-                {
-                    SqlCommand command = new SqlCommand(queryString, connection);
-                    connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        filme = new Filme
-                        {
-                            Titulo = reader["Titulo"].ToString(),
-                            Genero = reader["Genero"].ToString(),
-                            DataCadastro = Convert.ToDateTime(reader["DataCadastro"].ToString()),
-                            FilmeId = Convert.ToInt32(reader["FilmeId"].ToString())
-                        };
-                        ListFilme.Add(filme);
-                    }
-                }
-                finally
-                {
-                    if (dataRead != null)
-                    {
-                        dataRead.Close();
-                    }
-                    else if (connection != null)
-                    {
-                        connection.Close();
-                    }
-                }
-                return ListFilme;
-            }
-
-        }
-
-        public Filme RetornaFilmeId(int id)
-        {
-            string queryString = @"SELECT * FROM Filme WHERE FilmeId = " + id;
-            Filme filme = null;
+            string queryString = @"SELECT * FROM Locacao";
+            Locacao locacao;
+            List<Locacao> ListaLocacao = new List<Locacao>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -157,15 +114,72 @@ namespace FilmesAPI.Repositorio
 
                     while (reader.Read())
                     {
-                        filme = new Filme
+                        locacao = new Locacao
                         {
-                            FilmeId = Convert.ToInt32(reader["FilmeId"]),
+                            LocacaoId = Convert.ToInt32(reader["LocacaoId"]),
                             Titulo = reader["Titulo"].ToString(),
-                            Genero = reader["Genero"].ToString(),
-                            DataCadastro = Convert.ToDateTime(reader["DataCadastro"].ToString())
+                            Valor = Convert.ToDecimal(reader["Valor"]),
+                            DataRetirada = Convert.ToDateTime(reader["DataRetirada"]),
+                            DataDevolucao = Convert.ToDateTime(reader["DataDevolucao"]),
+                            ClienteId = Convert.ToInt32(reader["ClienteId"]),
+                            FilmeId = Convert.ToInt32(reader["FilmeId"])
                         };
+
+                        ListaLocacao.Add(locacao);
                     }
                 }
+
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
+                finally
+                {
+                    if (dataRead != null)
+                    {
+                        dataRead.Close();
+                    }
+                    else if (connection != null)
+                    {
+                        connection.Close();
+                    }
+                }
+            }
+            return ListaLocacao;
+        }
+
+
+        public Locacao RetornaLocacaoId(int id)
+        {
+            string queryString = @"SELECT * FROM Locacao WHERE LocacaoId = " + id;
+            Locacao locacao = null;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        locacao = new Locacao
+                        {
+                            LocacaoId = Convert.ToInt32(reader["LocacaoId"]),
+                            Titulo = reader["Titulo"].ToString(),
+                            Valor = Convert.ToDecimal(reader["Valor"]),
+                            DataRetirada = Convert.ToDateTime(reader["DataRetirada"]),
+                            DataDevolucao = Convert.ToDateTime(reader["DataDevolucao"]),
+                            ClienteId = Convert.ToInt32(reader["ClienteId"]),
+                            FilmeId = Convert.ToInt32(reader["FilmeId"])
+                        };
+
+                    }
+                }
+
                 catch (Exception ex)
                 {
 
@@ -179,11 +193,13 @@ namespace FilmesAPI.Repositorio
                     }
                 }
 
-                return filme;
+                finally
+                {
+                    connection.Close();
+                }
 
+                return locacao;
             }
-
         }
     }
 }
-

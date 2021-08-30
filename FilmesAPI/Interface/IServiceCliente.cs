@@ -27,6 +27,9 @@ namespace FilmesAPI.Interface
         //GET 
         void CpfCadastrado(CPF cpf);
 
+        //GET
+        void LoginCliente(Cliente cliente);
+
         
     }
 }

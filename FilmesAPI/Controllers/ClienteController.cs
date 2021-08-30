@@ -19,20 +19,20 @@ namespace FilmesAPI.Controllers
     public class ClienteController : ControllerBase
     {
 
-        public readonly ServiceCliente _serviceCli = new ServiceCliente();
+        public readonly ServiceCliente _serviceCliente = new ServiceCliente();
 
         [HttpGet("recuperacliente")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IEnumerable<Cliente> RecuperaCliente()
         {
-            return _serviceCli.RetornaCliente();
+            return _serviceCliente.RetornaCliente();
         }
 
         [HttpGet("recuperaclienteid/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public Cliente RecuperaClienteId(int id)
         {
-            return _serviceCli.RetornaClienteId(id);            
+            return _serviceCliente.RetornaClienteId(id);            
         }
 
         [HttpPost("adicionacliente")]
@@ -41,11 +41,11 @@ namespace FilmesAPI.Controllers
         public ActionResult AdicionaCliente(Cliente cliente)
         {
 
-            if(_serviceCli.CpfCadastrado(cliente.Cpf))
+           // if(_serviceCli.CpfCadastrado(cliente.Cpf))
             
-                throw new Exception("CPF Já cadastrao para outro cliente !");
+                //throw new Exception("CPF Já cadastrao para outro cliente !");
             
-            _serviceCli.AdicionaCliente(cliente);
+            _serviceCliente.AdicionaCliente(cliente);
             return CreatedAtAction("", cliente);
 
         }
@@ -54,7 +54,7 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult DeletaCliente (int id)
         {
-            _serviceCli.RemoveCliente(id);
+            _serviceCliente.RemoveCliente(id);
             return Ok("Cliente excluido com sucesso !");
         }
 
@@ -62,9 +62,21 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult AtualizaCliente (Cliente cliente)
         {
-            _serviceCli.AtualizaCliente(cliente);
+            _serviceCliente.AtualizaCliente(cliente);
             return Ok("Cliente atualizado com sucesso !");
         }
+
+        [HttpGet("logincliente")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+
+        public ActionResult LoginCliente(Cliente cliente)
+        {
+            _serviceCliente.LoginCliente(cliente);
+            //_serviceCli.VerificarHash();
+            return Ok("Cliente logado com sucesso !");
+
+        }
+
 
     }
 }

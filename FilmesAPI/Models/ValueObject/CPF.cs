@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FilmesAPI.Models.ValueObject
@@ -17,9 +18,11 @@ namespace FilmesAPI.Models.ValueObject
             try
             {
                 cpf = LimpaCPF(cpf);
-                
-                //metodo que valida CPF (cpf)    
-                if (!ValidarCPf(cpf))
+
+                cpf = ValidarCPf(cpf);
+
+                //metodo que verificar CPF (cpf)    
+                if (!VerificarCPf(cpf))
                     throw new Exception(); 
             }
             catch (Exception)
@@ -33,26 +36,34 @@ namespace FilmesAPI.Models.ValueObject
         public string LimpaCPF(string cpf)
         {
             cpf = cpf.Trim(); // Remove todos espaços em branco tanto no inicio quanto no final da strng CPF 
-            cpf = cpf.Replace(".", "").Replace("-", ""); // remove todos os pontos ou traços e substitui por um valor vazio no lugar;
-            
+            //cpf = cpf.Replace(".", "").Replace("-", "").Replace("/",""); // remove todos os pontos ou traços e substitui por um valor vazio no lugar;
+            cpf = Regex.Replace(cpf, "[^0-9]", "");
+
             return cpf;
         }
 
+        //Criar um metodo para validar o tamanho do CPF
+        public string ValidarCPf(string cpf)
+        {
+
+            return cpf; // Criar metodo para validar o CPF se ele tem 11 caracteres, caso tenha menos, adicionar zeros a esquerda
+        }
 
         //Criar metodo para validar o CPF
-        public bool ValidarCPf(string cpf)
+        public bool VerificarCPf(string cpf)
         {
             int[] Digito1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
             int[] Digito2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
 
-            string CPF1, CPF2;
-            int soma = 0, resultado = 0;
-
+            string CPF1;
+            string CPF2;
+            int soma = 0;
+            int resultado;
 
             if (cpf.Length != 11) // O CPF não pode passar de 11 digitos numericos.
                 return false;
 
-            CPF1 = cpf.Substring(0, 10); // Substring irá contar dez possições apartir do vetor 0
+            CPF1 = cpf.Substring(0, 9); // Substring irá contar dez possições apartir do vetor 0
 
 
             for (int i = 0; i < 9; i++) // utilizar o FOR para obter o vetor do array CPF inserido e multiplicar pelo vetor Digito1 
@@ -71,7 +82,7 @@ namespace FilmesAPI.Models.ValueObject
             }
 
             CPF2 = resultado.ToString(); // o CPF irá receber o primeiro digito verificador.
-            CPF1 = CPF1 + CPF2;
+            CPF1 += CPF2;
 
             soma = 0; // Reutilizar a variavel para o segundo digito.
 
@@ -91,17 +102,9 @@ namespace FilmesAPI.Models.ValueObject
                 resultado = 11 - resultado;
             }
 
-            CPF2 = CPF2 + resultado.ToString(); // irá receber o segundo digito do CPF
+            CPF2 += resultado.ToString(); // irá receber o segundo digito do CPF
 
             return cpf.EndsWith(CPF2); //ENDSWITH Determina se o final desta instância de cadeia de caracteres corresponde à cadeia de caracteres especificada.
         }
-
-
-        //Criar um metodo para validar o tamnho do CPF
-        public string TamanhoCPf(string cpf)
-        {
-            return cpf;
-        }
-
     }
 }

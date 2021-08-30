@@ -21,11 +21,11 @@ namespace FilmesAPI.Models
         [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "O Gênero não pode conter números ou caracteres especiais")]
         public string Genero { get; set; }
 
-        [Required]
-        [DataType(DataType.Date,ErrorMessage ="A data é obrigatória para o cadastro do produto")]
-        [StringLength(10, MinimumLength = 10, ErrorMessage ="A data precisa ter 6 caracteres!")]
-        [RegularExpression(@"^[0-9]{2}[/][0-9]{2}[/][0-9]{4}", ErrorMessage ="Inserir a data no padrão dd/mm/yy")]
-        public string DataCadastro { get; set; }
+        [Required(ErrorMessage = "A data é obrigatória para a locação do produto")]
+        [DataType(DataType.Date)]
+        public DateTime DataCadastro { get; set; }
+
+        public ICollection<Locacao> Locacao { get; set; }
 
     }
 }

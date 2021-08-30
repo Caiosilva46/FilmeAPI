@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace FilmesAPI.Interface
 {
-    public interface IServiceFilme
+    interface IRepositorioLocacao
     {
         //PUT
-        void AtualizaFilme(Filme filme);
+        void AtualizaLocacao(Locacao locacao);
 
         //POST
-        void AdicionaFilme(Filme filme);
+        void AdicionaLocacao(Locacao locacao);
 
         //DELETE
-        void RemoveFilme(int id);
+        void RemoveLocacao(int id);
 
         //GET
-        List<Filme> RetornaFilme();
+        List<Locacao> RetornaLocacao();
 
         //GETID
-        Filme RetornaFilmeId(int id);
+        Locacao RetornaLocacaoId(int id);
     }
 }

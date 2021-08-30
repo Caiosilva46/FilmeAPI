@@ -21,7 +21,7 @@ namespace FilmesAPI.Models
         public string Nome { get; set; }
 
         [Required(ErrorMessage ="O CPF é obrigatório")]
-        public CPF Cpf { get; set; }
+        public string Cpf { get; set; }
 
         [Required(ErrorMessage ="O RG é obrigatório")]
         [StringLength(12,ErrorMessage ="O RG Não pode conter mais que 12 dígitos")]
@@ -29,12 +29,13 @@ namespace FilmesAPI.Models
         public string RG { get; set; }
 
         [Required(ErrorMessage ="O Email é obrigatório")]
-        public Email email { get; set; }
+        public string Email { get; set; }
 
         [Required(ErrorMessage ="A senha do cliente é obrigatório")]
         [StringLength(15, MinimumLength =4, ErrorMessage ="A senha teve ter no mínimo 4 digitos e maximo de 15 digitos")]
         public string Senha { get; set; }
 
+        public ICollection<Locacao> Locacao { get; set; }
 
     }
 }

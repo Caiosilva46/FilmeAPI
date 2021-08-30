@@ -70,5 +70,10 @@ namespace FilmesAPI.Services
         {
             rep.CpfCadastrado(Cpf);
         }
+
+        public void LoginCliente(Cliente cliente)
+        {
+            rep.LoginCliente(cliente);
+        }
     }
 }

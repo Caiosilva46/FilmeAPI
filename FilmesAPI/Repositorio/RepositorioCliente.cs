@@ -7,208 +7,260 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using FilmesAPI.Models.ValueObject;
+using System.Data;
 
 namespace FilmesAPI.Repositorio
 {
     public class RepositorioCliente : IRepositorioCliente
     {
-        SqlDataReader dr = null;
+        SqlDataReader dataRead = null;
+
+        string connectionString = @"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+
         public void AtualizaCliente(Cliente cliente)
         {
+            string queryString = @"UPDATE Cliente SET Nome = @Nome, CPF = @CPF, RG = @RG, Email = @Email, Senha = @Senha WHERE ClienteId = @ClienteId";
 
-            SqlConnection conn = new SqlConnection(@"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-
-            try
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                conn.Open();
-                string AtualizaCliente = @"UPDATE Cliente SET Nome = @Nome, CPF = @CPF, RG = @RG, Email = @Email, Senha = @Senha WHERE ClienteId = @ClienteId";
-                SqlCommand cmd = new SqlCommand(AtualizaCliente, conn);
-                cmd.Parameters.AddWithValue("@ClienteId", cliente.ClienteId);
-                cmd.Parameters.AddWithValue("@Nome", cliente.Nome);
-                cmd.Parameters.AddWithValue("@CPF", cliente.Cpf);
-                cmd.Parameters.AddWithValue("@RG", cliente.RG);
-                cmd.Parameters.AddWithValue("@Email", cliente.email);
-                cmd.Parameters.AddWithValue("@Senha", cliente.Senha);
-                cmd.ExecuteNonQuery();
-            }
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    command.Parameters.AddWithValue("@ClienteId", cliente.ClienteId);
+                    command.Parameters.AddWithValue("@Nome", cliente.Nome);
+                    command.Parameters.AddWithValue("@CPF", cliente.Cpf);
+                    command.Parameters.AddWithValue("@RG", cliente.RG);
+                    command.Parameters.AddWithValue("@Email", cliente.Email);
+                    command.Parameters.AddWithValue("@Senha", cliente.Senha);
+                    command.ExecuteNonQuery();
+                }
 
-            catch (Exception ex)
-            {
-                throw ex; // retorna mensagem de erro
-            }
+                catch (Exception ex)
+                {
+                    throw ex; // retorna mensagem de erro
+                }
 
-            finally
-            {
-                conn.Close();
+                finally
+                {
+                    connection.Close();
+                }
             }
-
         }
 
         public void AdicionaCliente(Cliente cliente)
         {
+            string queryString = @"INSERT INTO cliente (ClienteId, Nome, CPF, RG, Email, Senha) VALUES (@ClienteId ,@Nome, @CPF, @RG, @Email, @Senha)";
 
-            SqlConnection conn = new SqlConnection(@"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-
-            try
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                conn.Open();
-                string InsereCliente = @"INSERT INTO cliente (ClienteId, Nome, CPF, RG, Email, Senha) VALUES (@ClienteId ,@Nome, @CPF, @RG, @Email, @Senha)";
-                SqlCommand cmd = new SqlCommand(InsereCliente, conn);
-                cmd.Parameters.AddWithValue("@ClienteId", cliente.ClienteId);
-                cmd.Parameters.AddWithValue("@Nome", cliente.Nome);
-                cmd.Parameters.AddWithValue("@CPF", cliente.Cpf); 
-                cmd.Parameters.AddWithValue("@RG", cliente.RG);
-                cmd.Parameters.AddWithValue("@Email", cliente.email);
-                cmd.Parameters.AddWithValue("@Senha", cliente.Senha);
-                cmd.ExecuteNonQuery();
-            }
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    command.Parameters.AddWithValue("@ClienteId", cliente.ClienteId);
+                    command.Parameters.AddWithValue("@Nome", cliente.Nome);
+                    command.Parameters.AddWithValue("@CPF", cliente.Cpf);
+                    command.Parameters.AddWithValue("@RG", cliente.RG);
+                    command.Parameters.AddWithValue("@Email", cliente.Email);
+                    command.Parameters.AddWithValue("@Senha", cliente.Senha);
+                    command.ExecuteNonQuery();
+                }
 
-            catch (Exception ex)
-            {
-                throw ex;  // retorna mensagem de erro
-            }
+                catch (Exception ex)
+                {
+                    throw ex;  // retorna mensagem de erro
+                }
 
-            finally
-            {
-                conn.Close();
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
 
         public void RemoveCliente(int id)
         {
+            string queryString = @"DELETE  FROM cliente WHERE ClienteId = @ClienteId";
 
-            SqlConnection conn = new SqlConnection(@"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-
-            try
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                conn.Open();
-                string RemoveCliente =  @"DELETE  FROM cliente WHERE ClienteId = @ClienteId";
-                SqlCommand cmd = new SqlCommand(RemoveCliente, conn);
-                cmd.Parameters.AddWithValue("@ClienteId", id);
-                cmd.ExecuteNonQuery();
-            }
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    command.Parameters.AddWithValue("@ClienteId", id);
+                    command.ExecuteNonQuery();
+                }
 
-            catch (Exception ex)
-            {
-                throw ex;  // retorna mensagem de erro
-            }
+                catch (Exception ex)
+                {
+                    throw ex;  // retorna mensagem de erro
+                }
 
-            finally
-            {
-                conn.Close();
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
 
         public List<Cliente> RetornaCliente()
         {
+            string queryString = @"SELECT * FROM cliente";
+            Cliente cliente;
+            List<Cliente> ListaDeClientes = new List<Cliente>();
 
-            SqlConnection conn = new SqlConnection(@"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-
-            Cliente cliente = null;
-            List<Cliente> ListCliente = new List<Cliente>();
-
-            try
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                conn.Open();
-                string retornaCliente = @"SELECT * FROM cliente";
-                SqlCommand cmd = new SqlCommand(retornaCliente, conn);
-                SqlDataReader dr = cmd.ExecuteReader();
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
 
-                while (dr.Read())
-                {
-                    cliente = new Cliente();
-                    cliente.Nome = dr["Nome"].ToString();
-                    cliente.Cpf = dr["CPF"].ToString();
-                    cliente.RG = dr["RG"].ToString();
-                    cliente.email = dr["Email"].ToString();
-                    cliente.Senha = dr["Senha"].ToString();
-                    cliente.ClienteId = Convert.ToInt32(dr["ClienteId"]);
-                    ListCliente.Add(cliente);
+                    while (reader.Read())
+                    {
+                        cliente = new Cliente
+                        {
+                            Nome = reader["Nome"].ToString(),
+                            //Cpf = (CPF)reader["CPF"],
+                            Cpf = reader["CPF"].ToString(),
+                            RG = reader["RG"].ToString(),
+                            //Email = (Email)reader["Email"],
+                            Email = reader["Email"].ToString(),
+
+                            Senha = reader["Senha"].ToString(),
+                            ClienteId = Convert.ToInt32(reader["ClienteId"])
+                        };
+
+                        ListaDeClientes.Add(cliente);
+                    }
                 }
+                finally
+                {
+                    if (dataRead != null)
+                    {
+                        dataRead.Close();
+                    }
+                    else if (connection != null)
+                    {
+                        connection.Close();
+                    }
+                }
+
+                return ListaDeClientes;
             }
-            
-            finally
-            {
-                if (dr != null)
-                {
-                    dr.Close();
-                }
-                else if (conn != null)
-                {
-                    conn.Close();
-                }
-            }
-            return ListCliente;
         }
 
         public Cliente RetornaClienteId(int id)
         {
-
-            SqlConnection conn = new SqlConnection(@"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             Cliente cliente = null;
+            string queryString = @"SELECT * FROM Cliente WHERE ClienteId = " + id;
 
-            try
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                conn.Open();
-                string RetornaClienteId = @"SELECT * FROM Cliente WHERE ClienteId = " + id;
-                SqlCommand cmd = new SqlCommand(RetornaClienteId, conn);
-                SqlDataReader dr = cmd.ExecuteReader();
-
-                while (dr.Read())
+                try
                 {
-                    cliente = new Cliente();
-                    cliente.ClienteId = Convert.ToInt32(dr["ClienteId"].ToString());
-                    cliente.Nome = dr["Nome"].ToString();
-                    cliente.Cpf = dr["CPF"].ToString();
-                    cliente.RG = dr["RG"].ToString();
-                    cliente.email = dr["Email"].ToString();
-                    cliente.Senha = dr["Senha"].ToString();
-                }
-            }
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
 
-            catch (Exception ex)
-            {
-                throw ex;  // retorna mensagem de erro
-            }
+                    while (reader.Read())
+                    {
+                        cliente = new Cliente
+                        {
+                            ClienteId = Convert.ToInt32(reader["ClienteId"].ToString()),
+                            Nome = reader["Nome"].ToString(),
+                            //Cpf = (CPF)reader["CPF"],
+                            Cpf = reader["CPF"].ToString(),
+                            RG = reader["RG"].ToString(),
+                            //Email = (Email)reader["Email"],
+                            Email = reader["Email"].ToString(),
+                            Senha = reader["Senha"].ToString(),
+                        };
+                    }
+                }
 
-            finally
-            {
-                if (dr != null)
+                catch (Exception ex)
                 {
-                    dr.Close();
+                    throw ex;  // retorna mensagem de erro
                 }
-                else if (conn != null)
+
+                finally
                 {
-                    conn.Close();
+                    if (dataRead != null)
+                    {
+                        dataRead.Close();
+                    }
+                    else if (connection != null)
+                    {
+                        connection.Close();
+                    }
                 }
+
+                return cliente;
             }
-            return cliente;
         }
 
         public void CpfCadastrado(CPF cpf)
         {
-            SqlConnection conn = new SqlConnection(@"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            string queryString = @"SELECT CPF FROM Cliente WHERE CPF = @CPF";
 
-            try
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                conn.Open();
-                string RecuperaCPF = @"SELECT CPF FROM Cliente WHERE CPF = @CPF";
-                SqlCommand cmd = new SqlCommand(RecuperaCPF, conn);
-                cmd.Parameters.AddWithValue("@CPF", cpf);
-                cmd.ExecuteNonQuery();
+                SqlCommand command = new SqlCommand(queryString, connection);
+                connection.Open();
+                command.Parameters.AddWithValue("@CPF", cpf);
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    LendoCpf((IDataRecord)reader);
+                }
+
+                // usuário não existe
+
+                reader.Close();
+
             }
 
-            catch (Exception ex)
+            void LendoCpf(IDataRecord record)
             {
-                throw ex;  // retorna mensagem de erro
-            }
-
-            finally
-            {
-                conn.Close();
+                if (cpf.Equals(record[0]))
+                {
+                    //throw new Exception(); aqui retorna a mensagem se o CPF existir
+                }
             }
         }
 
+        public void LoginCliente(Cliente cliente)
+        {
+            string queryString = @"SELECT Email, Senha FROM Usuarios WHERE Email = @Email AND Senha = @Senha";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    command.Parameters.AddWithValue("@ClienteId", cliente.Email);
+                    command.Parameters.AddWithValue("@ClienteId", cliente.Senha);
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
     }
 }
+
 

@@ -8,14 +8,19 @@ namespace FilmesAPI.Interface
 {
     interface IRepositorioFilme
     {
+        //PUT
         void AtualizaFilme(Filme filme);
 
+        //POST
         void AdicionaFilme(Filme filme);
 
+        //DELETE
         void RemoveFilme(int id);
 
+        //GET
         List<Filme> RetornaFilme();
 
+        //GETID
         Filme RetornaFilmeId(int id);
     }
 }

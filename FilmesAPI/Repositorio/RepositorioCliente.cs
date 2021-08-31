@@ -13,13 +13,13 @@ namespace FilmesAPI.Repositorio
 {
     public class RepositorioCliente : IRepositorioCliente
     {
-        SqlDataReader dataRead = null;
+        SqlDataReader dataRead;
 
         string connectionString = @"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
         public void AtualizaCliente(Cliente cliente)
         {
-            string queryString = @"UPDATE Cliente SET Nome = @Nome, CPF = @CPF, RG = @RG, Email = @Email, Senha = @Senha WHERE ClienteId = @ClienteId";
+            string queryString = @"UPDATE Cliente SET Nome = @Nome, RG = @RG, Email = @Email, Senha = @Senha WHERE ClienteId = @ClienteId";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -29,7 +29,7 @@ namespace FilmesAPI.Repositorio
                     connection.Open();
                     command.Parameters.AddWithValue("@ClienteId", cliente.ClienteId);
                     command.Parameters.AddWithValue("@Nome", cliente.Nome);
-                    command.Parameters.AddWithValue("@CPF", cliente.Cpf);
+                    //command.Parameters.AddWithValue("@CPF", cliente.Cpf);
                     command.Parameters.AddWithValue("@RG", cliente.RG);
                     command.Parameters.AddWithValue("@Email", cliente.Email);
                     command.Parameters.AddWithValue("@Senha", cliente.Senha);
@@ -44,6 +44,7 @@ namespace FilmesAPI.Repositorio
                 finally
                 {
                     connection.Close();
+                    
                 }
             }
         }
@@ -67,7 +68,7 @@ namespace FilmesAPI.Repositorio
                     command.ExecuteNonQuery();
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
                     if (cliente.ClienteId == cliente.ClienteId)
                     {
@@ -84,7 +85,7 @@ namespace FilmesAPI.Repositorio
 
         public void RemoveCliente(int id)
         {
-            string queryString = @"DELETE  FROM cliente WHERE ClienteId = @ClienteId";
+            string queryString = @"DELETE FROM cliente WHERE ClienteId = @ClienteId";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -96,9 +97,9 @@ namespace FilmesAPI.Repositorio
                     command.ExecuteNonQuery();
                 }
 
-                catch (Exception)
+                catch (Exception ex)
                 {
-
+                    throw ex;
                 }
 
                 finally
@@ -110,7 +111,7 @@ namespace FilmesAPI.Repositorio
 
         public List<Cliente> RetornaCliente()
         {
-            string queryString = @"SELECT * FROM cliente";
+            string queryString = @"SELECT c.ClienteId, c.Nome, c.Cpf, c.RG, c.Email, c.Senha FROM cliente as c";
             Cliente cliente;
             List<Cliente> ListaDeClientes = new List<Cliente>();
 
@@ -127,13 +128,11 @@ namespace FilmesAPI.Repositorio
                         cliente = new Cliente
                         {
                             Nome = reader["Nome"].ToString(),
-                            //Cpf = (CPF)reader["CPF"],
-                            Cpf = reader["CPF"].ToString(),
+                            Cpf = Convert.ToString(reader["CPF"]),
                             RG = reader["RG"].ToString(),
-                            //Email = (Email)reader["Email"],
-                            Email = reader["Email"].ToString(),
+                            Email = Convert.ToString(reader["Email"]),
                             Senha = reader["Senha"].ToString(),
-                            ClienteId = Convert.ToInt32(reader["ClienteId"])
+                            ClienteId = int.Parse(reader["ClienteId"].ToString())
                         };
 
                         ListaDeClientes.Add(cliente);
@@ -158,7 +157,7 @@ namespace FilmesAPI.Repositorio
         public Cliente RetornaClienteId(int id)
         {
             Cliente cliente = null;
-            string queryString = @"SELECT * FROM Cliente WHERE ClienteId = " + id;
+            string queryString = @"SELECT c.ClienteId, c.Nome, c.Cpf, c.RG, c.Email, c.Senha FROM Cliente as c WHERE c.ClienteId = @Id ";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -166,25 +165,25 @@ namespace FilmesAPI.Repositorio
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
+                    command.Parameters.AddWithValue("@Id", id);
                     SqlDataReader reader = command.ExecuteReader();
+
 
                     while (reader.Read())
                     {
+
                         cliente = new Cliente
                         {
-                            ClienteId = Convert.ToInt32(reader["ClienteId"].ToString()),
+                            ClienteId = int.Parse(reader["ClienteId"].ToString()),
                             Nome = reader["Nome"].ToString(),
-                            //Cpf = (CPF)reader["CPF"],
-                            Cpf = reader["CPF"].ToString(),
+                            Cpf = Convert.ToString(reader["CPF"]),
                             RG = reader["RG"].ToString(),
-                            //Email = (Email)reader["Email"],
-                            Email = reader["Email"].ToString(),
+                            Email = Convert.ToString(reader["Email"]),
                             Senha = reader["Senha"].ToString(),
                         };
                     }
                 }
-
-                catch (Exception)
+                catch (Exception ex)
                 {
                     throw;
                 }

@@ -32,6 +32,10 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public Cliente RecuperaClienteId(int id)
         {
+            if(_serviceCliente.LocalizaId(id) != true)
+            {
+                return id;
+            }
             return _serviceCliente.RetornaClienteId(id);            
         }
 

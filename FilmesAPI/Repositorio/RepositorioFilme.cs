@@ -16,7 +16,7 @@ namespace FilmesAPI.Repositorio
         SqlDataReader dataRead = null;
         public void AtualizaFilme(Filme filme)
         {
-            string queryString = @"UPDATE filme SET Titulo = @Titulo, Genero = @Genero, DataCadastro = @DataCadastro  WHERE FilmeId = @FilmeId";
+            string queryString = @"UPDATE filme SET Titulo = @Titulo, Genero = @Genero  WHERE FilmeId = @FilmeId";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -187,6 +187,32 @@ namespace FilmesAPI.Repositorio
             }
 
         }
+
+        public bool LocalizaId(int id)
+        {
+            string queryString = @"SELECT filmeId FROM Filme WHERE filmeId = @filmeId";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                bool resultado = false;
+                SqlCommand command = new SqlCommand(queryString, connection);
+                connection.Open();
+                command.Parameters.AddWithValue("@FilmeId", id);
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    resultado = Convert.ToBoolean(reader["FilmeId"]);
+
+                }
+
+                connection.Close();
+
+                return resultado;
+            }
+        }
+
     }
 }
 

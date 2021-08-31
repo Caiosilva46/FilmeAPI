@@ -47,7 +47,13 @@ namespace FilmesAPI.Controllers
 
         public ActionResult DeletaFilme (int id)
         {
+            if(_serviceFilme.LocalizaId(id) != true)
+            {
+                return BadRequest("Cliente não localizado !");
+            }
+
             _serviceFilme.RemoveFilme(id);
+
             return Ok("Item deletado com sucesso!");
         }
 

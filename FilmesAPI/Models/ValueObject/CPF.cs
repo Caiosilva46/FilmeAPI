@@ -8,10 +8,6 @@ namespace FilmesAPI.Models.ValueObject
 {
     public class CPF
     {
-        public CPF ()
-        {
-
-        }
 
         public CPF (string cpf)
         {

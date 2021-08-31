@@ -30,7 +30,7 @@ namespace FilmesAPI.Interface
         //GET
         void LoginCliente(Cliente cliente);
 
-        //GET
+        //GETINFO
         bool LocalizaId(int id);
     }
 }

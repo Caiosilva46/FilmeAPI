@@ -35,5 +35,10 @@ namespace FilmesAPI.Services
         {
             return rep.RetornaFilmeId(id);
         }
+
+        public bool LocalizaId(int id)
+        {
+            return rep.LocalizaId(id);
+        }
     }
 }

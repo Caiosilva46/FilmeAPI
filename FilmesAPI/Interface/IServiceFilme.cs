@@ -22,5 +22,8 @@ namespace FilmesAPI.Interface
 
         //GETID
         Filme RetornaFilmeId(int id);
+
+        //GETINFO
+        bool LocalizaId(int id);
     }
 }

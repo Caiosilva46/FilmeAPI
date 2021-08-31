@@ -69,7 +69,10 @@ namespace FilmesAPI.Repositorio
 
                 catch (Exception ex)
                 {
-                    throw ex;  // retorna mensagem de erro
+                    if (cliente.ClienteId == cliente.ClienteId)
+                    {
+                        cliente.ClienteId++;
+                    }
                 }
 
                 finally
@@ -93,9 +96,9 @@ namespace FilmesAPI.Repositorio
                     command.ExecuteNonQuery();
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;  // retorna mensagem de erro
+
                 }
 
                 finally
@@ -129,7 +132,6 @@ namespace FilmesAPI.Repositorio
                             RG = reader["RG"].ToString(),
                             //Email = (Email)reader["Email"],
                             Email = reader["Email"].ToString(),
-
                             Senha = reader["Senha"].ToString(),
                             ClienteId = Convert.ToInt32(reader["ClienteId"])
                         };
@@ -182,9 +184,9 @@ namespace FilmesAPI.Repositorio
                     }
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;  // retorna mensagem de erro
+                    throw;
                 }
 
                 finally
@@ -228,7 +230,7 @@ namespace FilmesAPI.Repositorio
             {
                 if (cpf.Equals(record[0]))
                 {
-                    //throw new Exception(); aqui retorna a mensagem se o CPF existir
+                    throw new Exception("CPF existe!");
                 }
             }
         }
@@ -258,6 +260,31 @@ namespace FilmesAPI.Repositorio
                 {
                     connection.Close();
                 }
+            }
+        }
+
+        public bool LocalizaId(int id)
+        {
+            string queryString = @"SELECT clienteId FROM Cliente WHERE clienteId = @clienteId";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                bool resultado = false;
+                SqlCommand command = new SqlCommand(queryString, connection);
+                connection.Open();
+                command.Parameters.AddWithValue("@ClienteId", id);
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    resultado = Convert.ToBoolean(reader["ClienteId"]);
+
+                }
+
+                connection.Close();
+
+                return resultado;
             }
         }
     }

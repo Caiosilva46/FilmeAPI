@@ -41,12 +41,12 @@ namespace FilmesAPI.Controllers
         public ActionResult AdicionaCliente(Cliente cliente)
         {
 
-           // if(_serviceCli.CpfCadastrado(cliente.Cpf))
+           //if(_serviceCliente.CpfCadastrado(cliente.Cpf))
             
                 //throw new Exception("CPF Já cadastrao para outro cliente !");
             
             _serviceCliente.AdicionaCliente(cliente);
-            return CreatedAtAction("", cliente);
+            return CreatedAtAction("adicionacliente", cliente);
 
         }
 
@@ -54,7 +54,13 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult DeletaCliente (int id)
         {
+            if(_serviceCliente.LocalizaId(id) != true)
+            {
+                return BadRequest("Cliente não localizado !");
+            }
+
             _serviceCliente.RemoveCliente(id);
+
             return Ok("Cliente excluido com sucesso !");
         }
 
@@ -76,7 +82,6 @@ namespace FilmesAPI.Controllers
             return Ok("Cliente logado com sucesso !");
 
         }
-
 
     }
 }

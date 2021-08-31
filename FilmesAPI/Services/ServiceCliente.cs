@@ -75,5 +75,10 @@ namespace FilmesAPI.Services
         {
             rep.LoginCliente(cliente);
         }
+
+        public bool LocalizaId(int id)
+        {
+            return rep.LocalizaId(id);
+        }
     }
 }

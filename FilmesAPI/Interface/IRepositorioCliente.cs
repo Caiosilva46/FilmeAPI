@@ -29,5 +29,8 @@ namespace FilmesAPI.Interface
 
         //GET
         void LoginCliente(Cliente cliente);
+       
+        //GET
+        bool LocalizaId(int id);
     }
 }

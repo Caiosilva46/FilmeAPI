@@ -33,9 +33,13 @@ namespace FilmesAPI.Repositorio
                     command.ExecuteNonQuery();
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;
+                    if(locacao.LocacaoId != locacao.LocacaoId)
+                    {
+                        throw new Exception();
+
+                    }
                 }
 
                 finally
@@ -64,8 +68,10 @@ namespace FilmesAPI.Repositorio
                 }
                 catch (Exception)
                 {
-
-                    throw;
+                    if (locacao.LocacaoId == locacao.LocacaoId)
+                    {
+                        locacao.LocacaoId++;
+                    }
                 }
                 finally
                 {

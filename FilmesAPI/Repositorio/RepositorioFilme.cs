@@ -62,7 +62,10 @@ namespace FilmesAPI.Repositorio
 
                 catch (Exception ex)
                 {
-                    throw ex;  // retorna mensagem de erro
+                    if (filme.FilmeId == filme.FilmeId)
+                    {
+                        filme.FilmeId++;
+                    }
                 }
 
                 finally

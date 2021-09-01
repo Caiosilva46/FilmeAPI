@@ -26,17 +26,21 @@ namespace FilmesAPI.Controllers
         public IEnumerable<Cliente> RecuperaCliente()
         {
             return _serviceCliente.RetornaCliente();
+            
         }
 
         [HttpGet("recuperaclienteid/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public Cliente RecuperaClienteId(int id)
+        public ActionResult<Cliente> RecuperaClienteId(int id)
         {
+
             if(_serviceCliente.LocalizaId(id) != true)
             {
-                return id;
+                return BadRequest("Cliente não encontrado !");
             }
-            return _serviceCliente.RetornaClienteId(id);            
+
+            return _serviceCliente.RetornaClienteId(id);
+
         }
 
         [HttpPost("adicionacliente")]
@@ -45,10 +49,10 @@ namespace FilmesAPI.Controllers
         public ActionResult AdicionaCliente(Cliente cliente)
         {
 
-           //if(_serviceCliente.CpfCadastrado(cliente.Cpf))
-            
-                //throw new Exception("CPF Já cadastrao para outro cliente !");
-            
+            _serviceCliente.CpfCadastrado(cliente.Cpf);
+
+            //throw new Exception("CPF Já cadastrao para outro cliente !");
+
             _serviceCliente.AdicionaCliente(cliente);
             return CreatedAtAction("adicionacliente", cliente);
 
@@ -79,10 +83,10 @@ namespace FilmesAPI.Controllers
         [HttpGet("logincliente")]
         [ProducesResponseType(StatusCodes.Status200OK)]
 
-        public ActionResult LoginCliente(Cliente cliente)
+        public ActionResult LoginCliente(string email, string senha)
         {
-            _serviceCliente.LoginCliente(cliente);
-            //_serviceCli.VerificarHash();
+            _serviceCliente.LoginCliente(senha,email);
+            //_serviceCliente.VerificarHash(senha);
             return Ok("Cliente logado com sucesso !");
 
         }

@@ -19,7 +19,7 @@ namespace FilmesAPI.Repositorio
 
         public void AtualizaCliente(Cliente cliente)
         {
-            string queryString = @"UPDATE Cliente SET Nome = @Nome, RG = @RG, Email = @Email, Senha = @Senha WHERE ClienteId = @ClienteId";
+            string queryString = @"UPDATE tb_cliente SET nome = @nome, rg = @rg, email = @email, senha = @senha WHERE Id = @Id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -27,12 +27,12 @@ namespace FilmesAPI.Repositorio
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
-                    command.Parameters.AddWithValue("@ClienteId", cliente.ClienteId);
-                    command.Parameters.AddWithValue("@Nome", cliente.Nome);
-                    //command.Parameters.AddWithValue("@CPF", cliente.Cpf);
-                    command.Parameters.AddWithValue("@RG", cliente.RG);
-                    command.Parameters.AddWithValue("@Email", cliente.Email);
-                    command.Parameters.AddWithValue("@Senha", cliente.Senha);
+                    command.Parameters.AddWithValue("@Id", cliente.Id);
+                    command.Parameters.AddWithValue("@nome", cliente.Nome);
+                    command.Parameters.AddWithValue("@cpf", cliente.Cpf);
+                    command.Parameters.AddWithValue("@rg", cliente.RG);
+                    command.Parameters.AddWithValue("@email", cliente.Email);
+                    command.Parameters.AddWithValue("@senha", cliente.Senha);
                     command.ExecuteNonQuery();
                 }
 
@@ -44,14 +44,14 @@ namespace FilmesAPI.Repositorio
                 finally
                 {
                     connection.Close();
-                    
+
                 }
             }
         }
 
         public void AdicionaCliente(Cliente cliente)
         {
-            string queryString = @"INSERT INTO cliente (ClienteId, Nome, CPF, RG, Email, Senha) VALUES (@ClienteId ,@Nome, @CPF, @RG, @Email, @Senha)";
+            string queryString = @"INSERT INTO tb_cliente (id, nome, cpf, rg, email, senha) VALUES (@id ,@nome ,@cpf, @rg, @email, @senha)";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -59,33 +59,36 @@ namespace FilmesAPI.Repositorio
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
-                    command.Parameters.AddWithValue("@ClienteId", cliente.ClienteId);
-                    command.Parameters.AddWithValue("@Nome", cliente.Nome);
-                    command.Parameters.AddWithValue("@CPF", cliente.Cpf);
-                    command.Parameters.AddWithValue("@RG", cliente.RG);
-                    command.Parameters.AddWithValue("@Email", cliente.Email);
-                    command.Parameters.AddWithValue("@Senha", cliente.Senha);
+                    command.Parameters.AddWithValue("@id", cliente.Id);
+                    command.Parameters.AddWithValue("@nome", cliente.Nome);
+                    command.Parameters.AddWithValue("@cpf", cliente.Cpf);
+                    command.Parameters.AddWithValue("@rg", cliente.RG);
+                    command.Parameters.AddWithValue("@email", cliente.Email);
+                    command.Parameters.AddWithValue("@senha", cliente.Senha);
                     command.ExecuteNonQuery();
                 }
 
                 catch (Exception)
                 {
-                    if (cliente.ClienteId == cliente.ClienteId)
+                    if (cliente.Id == cliente.Id)
                     {
-                        cliente.ClienteId++;
+                        cliente.Id++;
                     }
                 }
 
                 finally
                 {
+
                     connection.Close();
                 }
+                
             }
         }
 
+
         public void RemoveCliente(int id)
         {
-            string queryString = @"DELETE FROM cliente WHERE ClienteId = @ClienteId";
+            string queryString = @"DELETE FROM tb_cliente WHERE id = @id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -93,7 +96,7 @@ namespace FilmesAPI.Repositorio
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
-                    command.Parameters.AddWithValue("@ClienteId", id);
+                    command.Parameters.AddWithValue("@id", id);
                     command.ExecuteNonQuery();
                 }
 
@@ -111,7 +114,7 @@ namespace FilmesAPI.Repositorio
 
         public List<Cliente> RetornaCliente()
         {
-            string queryString = @"SELECT c.ClienteId, c.Nome, c.Cpf, c.RG, c.Email, c.Senha FROM cliente as c";
+            string queryString = @"SELECT c.id, c.nome, c.cpf, c.rg, c.email, c.senha FROM tb_cliente as c";
             Cliente cliente;
             List<Cliente> ListaDeClientes = new List<Cliente>();
 
@@ -127,12 +130,12 @@ namespace FilmesAPI.Repositorio
                     {
                         cliente = new Cliente
                         {
-                            Nome = reader["Nome"].ToString(),
-                            Cpf = Convert.ToString(reader["CPF"]),
-                            RG = reader["RG"].ToString(),
-                            Email = Convert.ToString(reader["Email"]),
-                            Senha = reader["Senha"].ToString(),
-                            ClienteId = int.Parse(reader["ClienteId"].ToString())
+                            Nome = reader["nome"].ToString(),
+                            Cpf = Convert.ToString(reader["cpf"]),
+                            RG = reader["rg"].ToString(),
+                            Email = Convert.ToString(reader["email"]),
+                            Senha = reader["senha"].ToString(),
+                            Id = int.Parse(reader["id"].ToString())
                         };
 
                         ListaDeClientes.Add(cliente);
@@ -157,7 +160,7 @@ namespace FilmesAPI.Repositorio
         public Cliente RetornaClienteId(int id)
         {
             Cliente cliente = null;
-            string queryString = @"SELECT c.ClienteId, c.Nome, c.Cpf, c.RG, c.Email, c.Senha FROM Cliente as c WHERE c.ClienteId = @Id ";
+            string queryString = @"SELECT c.id, c.nome, c.cpf, c.rg, c.email, c.senha FROM tb_cliente as c WHERE c.id = @id ";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -165,7 +168,7 @@ namespace FilmesAPI.Repositorio
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
-                    command.Parameters.AddWithValue("@Id", id);
+                    command.Parameters.AddWithValue("@id", id);
                     SqlDataReader reader = command.ExecuteReader();
 
 
@@ -174,12 +177,12 @@ namespace FilmesAPI.Repositorio
 
                         cliente = new Cliente
                         {
-                            ClienteId = int.Parse(reader["ClienteId"].ToString()),
-                            Nome = reader["Nome"].ToString(),
-                            Cpf = Convert.ToString(reader["CPF"]),
-                            RG = reader["RG"].ToString(),
-                            Email = Convert.ToString(reader["Email"]),
-                            Senha = reader["Senha"].ToString(),
+                            Id = int.Parse(reader["id"].ToString()),
+                            Nome = reader["nome"].ToString(),
+                            Cpf = Convert.ToString(reader["cpf"]),
+                            RG = reader["rg"].ToString(),
+                            Email = Convert.ToString(reader["email"]),
+                            Senha = reader["senha"].ToString(),
                         };
                     }
                 }
@@ -206,13 +209,13 @@ namespace FilmesAPI.Repositorio
 
         public void CpfCadastrado(CPF cpf)
         {
-            string queryString = @"SELECT CPF FROM Cliente WHERE CPF = @CPF";
+            string queryString = @"SELECT cpf FROM tb_cliente WHERE cpf = @cpf";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
                 connection.Open();
-                command.Parameters.AddWithValue("@CPF", cpf);
+                command.Parameters.AddWithValue("@cpf", cpf);
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
@@ -234,50 +237,48 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public void LoginCliente(Cliente cliente)
+        public bool LoginCliente(string senha, string email)
         {
-            string queryString = @"SELECT Email, Senha FROM Usuarios WHERE Email = @Email AND Senha = @Senha";
+            string queryString = @"SELECT email, senha FROM tb_cliente WHERE email = @email AND senha = @senha";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
 
-                try
-                {
-                    SqlCommand command = new SqlCommand(queryString, connection);
-                    connection.Open();
-                    command.Parameters.AddWithValue("@ClienteId", cliente.Email);
-                    command.Parameters.AddWithValue("@ClienteId", cliente.Senha);
-                    command.ExecuteNonQuery();
-                }
-                catch (Exception)
-                {
+                bool logado = false;
+                SqlCommand command = new SqlCommand(queryString, connection);
+                connection.Open();
+                command.Parameters.AddWithValue("@email", email);
+                command.Parameters.AddWithValue("@senha", senha);
+                SqlDataReader reader = command.ExecuteReader();
 
-                    throw;
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    logado = true;
                 }
 
-                finally
-                {
-                    connection.Close();
-                }
+                connection.Close();
+
+                return logado;
             }
         }
 
         public bool LocalizaId(int id)
         {
-            string queryString = @"SELECT clienteId FROM Cliente WHERE clienteId = @clienteId";
+            string queryString = @"SELECT id FROM tb_cliente WHERE id = @id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 bool resultado = false;
                 SqlCommand command = new SqlCommand(queryString, connection);
                 connection.Open();
-                command.Parameters.AddWithValue("@ClienteId", id);
+                command.Parameters.AddWithValue("@id", id);
                 SqlDataReader reader = command.ExecuteReader();
 
                 if (reader.HasRows)
                 {
                     reader.Read();
-                    resultado = Convert.ToBoolean(reader["ClienteId"]);
+                    resultado = true;
 
                 }
 

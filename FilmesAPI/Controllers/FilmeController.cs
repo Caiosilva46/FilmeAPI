@@ -29,8 +29,13 @@ namespace FilmesAPI.Controllers
 
         [HttpGet("recuperafilmeid/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public Filme RecuperaFilmeId(int id)
+        public ActionResult<Filme> RecuperaFilmeId(int id)
         {
+            if(_serviceFilme.LocalizaId(id) != true)
+            {
+                return BadRequest("Filme não localizado !");
+            }
+
             return _serviceFilme.RetornaFilmeId(id);
         }
 

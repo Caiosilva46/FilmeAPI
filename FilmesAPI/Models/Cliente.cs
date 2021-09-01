@@ -13,7 +13,7 @@ namespace FilmesAPI.Models
     public class Cliente
     {
         [Key]
-        public int ClienteId { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage ="O nome do cliente é obrigatório")]
         [StringLength(200, MinimumLength = 1,ErrorMessage ="O nome não pode conter mais que 200 caracteres ou menos que 1 caracteres")]
@@ -25,7 +25,7 @@ namespace FilmesAPI.Models
 
         [Required(ErrorMessage ="O RG é obrigatório")]
         [StringLength(12,ErrorMessage ="O RG Não pode conter mais que 12 dígitos")]
-        [RegularExpression(@"(^[0-9]{2}[.][0-9]{3}[.][0-9]{3}[-][a-zA-Z0-9]{1})$", ErrorMessage ="Esse RG não é válido! Por favor, informe um RG Válido")]
+        [RegularExpression(@"^[A-Za-z0-9''-'\s]{11}", ErrorMessage ="Esse RG não é válido! Por favor, informe um RG Válido")]
         public string RG { get; set; }
 
         [Required(ErrorMessage ="O Email é obrigatório")]

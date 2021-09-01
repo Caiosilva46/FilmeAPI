@@ -66,14 +66,15 @@ namespace FilmesAPI.Services
                 return false;
             }
         }
+
         public void CpfCadastrado(CPF Cpf)
         {
-            rep.CpfCadastrado(Cpf);
+             rep.CpfCadastrado(Cpf);
         }
 
-        public void LoginCliente(Cliente cliente)
+        public bool LoginCliente(string senha, string email)
         {
-            rep.LoginCliente(cliente);
+           return rep.LoginCliente(senha,email);
         }
 
         public bool LocalizaId(int id)

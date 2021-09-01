@@ -41,8 +41,8 @@ namespace FilmesAPI.Models.ValueObject
         //Criar um metodo para validar o tamanho do CPF
         public string ValidarCPf(string cpf)
         {
-
-            return cpf; // Criar metodo para validar o CPF se ele tem 11 caracteres, caso tenha menos, adicionar zeros a esquerda
+            string novocpf = cpf.PadLeft(11, '0'); // PADLEFT adiciona zeros a esquerda da variavel declarada.
+            return novocpf; // Criar metodo para validar o CPF se ele tem 11 caracteres, caso tenha menos, adicionar zeros a esquerda
         }
 
         //Criar metodo para validar o CPF

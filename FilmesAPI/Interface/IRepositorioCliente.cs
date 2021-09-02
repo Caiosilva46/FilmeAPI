@@ -25,12 +25,15 @@ namespace FilmesAPI.Interface
         Cliente RetornaClienteId(int id);
 
         //GET
-        void CpfCadastrado(CPF cpf);
+        bool CpfCadastrado(string cpf);
 
         //GET
         bool LoginCliente(string senha, string email);
        
         //GET
         bool LocalizaId(int id);
+
+        //GET
+        bool EmailCadastrado(string email);
     }
 }

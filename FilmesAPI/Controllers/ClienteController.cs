@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using FilmesAPI.Repositorio;
 using FilmesAPI.Interface;
 using FilmesAPI.Services;
+using FilmesAPI.Models.ValueObject;
 
 namespace FilmesAPI.Controllers
 {
@@ -26,7 +27,6 @@ namespace FilmesAPI.Controllers
         public IEnumerable<Cliente> RecuperaCliente()
         {
             return _serviceCliente.RetornaCliente();
-            
         }
 
         [HttpGet("recuperaclienteid/{id}")]
@@ -34,7 +34,7 @@ namespace FilmesAPI.Controllers
         public ActionResult<Cliente> RecuperaClienteId(int id)
         {
 
-            if(_serviceCliente.LocalizaId(id) != true)
+            if (_serviceCliente.LocalizaId(id) != true)
             {
                 return BadRequest("Cliente não encontrado !");
             }
@@ -48,11 +48,23 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult AdicionaCliente(Cliente cliente)
         {
+            CPF cpf = new CPF(cliente.Cpf);
 
-            _serviceCliente.CpfCadastrado(cliente.Cpf);
+            Email email = new Email(cliente.Email);
 
-            //throw new Exception("CPF Já cadastrao para outro cliente !");
+            RG rg = new RG(cliente.RG);
 
+            _serviceCliente.ValidaCliente(cliente);
+
+            if (_serviceCliente.CpfCadastrado(cliente.Cpf))
+            {
+                return BadRequest("CPF Já cadastrao para outro cliente !");
+            }
+            else if(_serviceCliente.EmailCadastrado(cliente.Email))
+            {
+                return BadRequest("Email Já cadastrao para outro cliente !");
+            }
+            
             _serviceCliente.AdicionaCliente(cliente);
             return CreatedAtAction("adicionacliente", cliente);
 
@@ -60,9 +72,9 @@ namespace FilmesAPI.Controllers
 
         [HttpDelete("deletacliente/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult DeletaCliente (int id)
+        public ActionResult DeletaCliente(int id)
         {
-            if(_serviceCliente.LocalizaId(id) != true)
+            if (_serviceCliente.LocalizaId(id) != true)
             {
                 return BadRequest("Cliente não localizado !");
             }
@@ -74,22 +86,19 @@ namespace FilmesAPI.Controllers
 
         [HttpPut("atualizacliente/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult AtualizaCliente (Cliente cliente)
+        public ActionResult AtualizaCliente(Cliente cliente)
         {
             _serviceCliente.AtualizaCliente(cliente);
             return Ok("Cliente atualizado com sucesso !");
         }
 
-        [HttpGet("logincliente")]
+        [HttpPost("logincliente")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-
         public ActionResult LoginCliente(string email, string senha)
         {
-            _serviceCliente.LoginCliente(senha,email);
+            _serviceCliente.LoginCliente(senha, email);
             //_serviceCliente.VerificarHash(senha);
             return Ok("Cliente logado com sucesso !");
-
         }
-
     }
 }

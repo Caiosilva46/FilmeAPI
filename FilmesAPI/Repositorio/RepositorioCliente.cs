@@ -132,7 +132,7 @@ namespace FilmesAPI.Repositorio
                         {
                             Nome = reader["nome"].ToString(),
                             Cpf = Convert.ToString(reader["cpf"]),
-                            RG = reader["rg"].ToString(),
+                            RG = Convert.ToString(reader["rg"]),
                             Email = Convert.ToString(reader["email"]),
                             Senha = reader["senha"].ToString(),
                             Id = int.Parse(reader["id"].ToString())
@@ -180,7 +180,7 @@ namespace FilmesAPI.Repositorio
                             Id = int.Parse(reader["id"].ToString()),
                             Nome = reader["nome"].ToString(),
                             Cpf = Convert.ToString(reader["cpf"]),
-                            RG = reader["rg"].ToString(),
+                            RG = Convert.ToString(reader["rg"]),
                             Email = Convert.ToString(reader["email"]),
                             Senha = reader["senha"].ToString(),
                         };
@@ -207,33 +207,28 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public void CpfCadastrado(CPF cpf)
+        public bool CpfCadastrado(string cpf)
         {
             string queryString = @"SELECT cpf FROM tb_cliente WHERE cpf = @cpf";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                bool cpfCadastrado = false;
                 SqlCommand command = new SqlCommand(queryString, connection);
                 connection.Open();
                 command.Parameters.AddWithValue("@cpf", cpf);
                 SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                
+                if (reader.HasRows)
                 {
-                    LendoCpf((IDataRecord)reader);
+                    reader.Read();
+                    cpfCadastrado = true;
                 }
 
-                // usuário não existe
+                connection.Close();
 
-                reader.Close();
+                return cpfCadastrado;
 
-            }
-
-            void LendoCpf(IDataRecord record)
-            {
-                if (cpf.Equals(record[0]))
-                {
-                    throw new Exception("CPF existe!");
-                }
             }
         }
 
@@ -285,6 +280,31 @@ namespace FilmesAPI.Repositorio
                 connection.Close();
 
                 return resultado;
+            }
+        }
+
+        public bool EmailCadastrado(string email)
+        {
+            string queryString = @"SELECT email FROM tb_cliente WHERE email = @email";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                bool emailValido = false;
+                SqlCommand command = new SqlCommand(queryString, connection);
+                connection.Open();
+                command.Parameters.AddWithValue("@email", email);
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    emailValido = true;
+
+                }
+
+                connection.Close();
+
+                return emailValido;
             }
         }
     }

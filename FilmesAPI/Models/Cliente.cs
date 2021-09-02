@@ -15,24 +15,22 @@ namespace FilmesAPI.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage ="O nome do cliente é obrigatório")]
-        [StringLength(200, MinimumLength = 1,ErrorMessage ="O nome não pode conter mais que 200 caracteres ou menos que 1 caracteres")]
-        [RegularExpression(@"^[a-zA-Z''-'\s]{1,200}$",ErrorMessage ="O nome não pode conter números ou caractéres especiais")]
+        [Required(ErrorMessage = "O nome do cliente é obrigatório")]
+        [StringLength(200, MinimumLength = 1, ErrorMessage = "O nome não pode conter mais que 200 caracteres ou menos que 1 caracteres")]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,200}$", ErrorMessage = "O nome não pode conter números ou caractéres especiais")]
         public string Nome { get; set; }
 
-        [Required(ErrorMessage ="O CPF é obrigatório")]
+        [Required(ErrorMessage = "O CPF é obrigatório")]
         public string Cpf { get; set; }
 
-        [Required(ErrorMessage ="O RG é obrigatório")]
-        [StringLength(12,ErrorMessage ="O RG Não pode conter mais que 12 dígitos")]
-        [RegularExpression(@"^[A-Za-z0-9''-'\s]{11}", ErrorMessage ="Esse RG não é válido! Por favor, informe um RG Válido")]
+        [Required(ErrorMessage = "O RG é obrigatório")]
         public string RG { get; set; }
 
-        [Required(ErrorMessage ="O Email é obrigatório")]
+        [Required(ErrorMessage = "O Email é obrigatório")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage ="A senha do cliente é obrigatório")]
-        [StringLength(15, MinimumLength =4, ErrorMessage ="A senha teve ter no mínimo 4 digitos e maximo de 15 digitos")]
+        [Required(ErrorMessage = "A senha do cliente é obrigatório")]
+        [StringLength(15, MinimumLength = 4, ErrorMessage = "A senha teve ter no mínimo 4 digitos e maximo de 15 digitos")]
         public string Senha { get; set; }
 
         public ICollection<Locacao> Locacao { get; set; }

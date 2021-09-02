@@ -39,6 +39,7 @@ namespace FilmesAPI.Services
             return rep.RetornaCliente();
         }
 
+
         public string CrypSenha(string senha)
         {
             MD5 md5Hash = MD5.Create();
@@ -67,9 +68,18 @@ namespace FilmesAPI.Services
             }
         }
 
-        public void CpfCadastrado(CPF Cpf)
+        public void ValidaCliente(Cliente cliente)
         {
-             rep.CpfCadastrado(Cpf);
+            if(!CpfCadastrado(cliente.Cpf))
+            {
+                cliente.Senha = CrypSenha(cliente.Senha);
+            }
+        }
+
+
+        public bool CpfCadastrado(string Cpf)
+        {
+            return rep.CpfCadastrado(Cpf);
         }
 
         public bool LoginCliente(string senha, string email)
@@ -80,6 +90,11 @@ namespace FilmesAPI.Services
         public bool LocalizaId(int id)
         {
             return rep.LocalizaId(id);
+        }
+
+        public bool EmailCadastrado(string email)
+        {
+            return rep.EmailCadastrado(email);
         }
     }
 }

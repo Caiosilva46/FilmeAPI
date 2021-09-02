@@ -19,13 +19,21 @@ namespace FilmesAPI.Models.ValueObject
 
                 //metodo que verificar CPF (cpf)    
                 if (!VerificarCPf(cpf))
-                    throw new Exception(); 
+                    throw new Exception();
+
             }
             catch (Exception)
             {
-                throw new Exception("CPF informado é inválido: " + cpf);
+                return Convert.ToBoolean(cpf);
             }
         }
+
+       /* public bool CpfValidado (string cpf)
+        {
+
+
+            return true;
+        }*/
 
 
         //TODO criar metodo para limpar CPF

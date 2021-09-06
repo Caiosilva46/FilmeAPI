@@ -23,7 +23,10 @@ namespace FilmesAPI.Interface
         //GETID
         Filme RetornaFilmeId(int id);
         
-        //GETINFO
+        //GET
         bool LocalizaId(int id);
+
+        //GET
+        bool TituloCadastrado(Filme filme);
     }
 }

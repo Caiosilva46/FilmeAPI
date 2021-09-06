@@ -16,7 +16,7 @@ namespace FilmesAPI.Models
         [RegularExpression(@"^[0-9a-zA-Z''-'\s]{1,30}$", ErrorMessage = "O título não pode conter caractéres especiais")]
         public string Titulo { get; set; }
 
-        [Required(ErrorMessage ="O campo gêmero é obrigatório")]
+        [Required(ErrorMessage ="O campo gênero é obrigatório")]
         [StringLength(20,MinimumLength =3, ErrorMessage = "O Gênero deve conter no máximo 20 caracteres e no mínimo 3 caracteres.")]
         [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "O Gênero não pode conter números ou caracteres especiais")]
         public string Genero { get; set; }

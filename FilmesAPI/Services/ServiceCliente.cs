@@ -13,7 +13,8 @@ namespace FilmesAPI.Services
 {
     public class ServiceCliente : IServiceCliente
     {
-        private readonly RepositorioCliente rep = new RepositorioCliente(); 
+        private readonly RepositorioCliente rep = new RepositorioCliente();
+
         public void AtualizaCliente(Cliente cliente)
         {
             rep.AtualizaCliente(cliente);
@@ -39,6 +40,40 @@ namespace FilmesAPI.Services
             return rep.RetornaCliente();
         }
 
+
+        public bool CpfCadastrado(string Cpf)
+        {
+            return rep.CpfCadastrado(Cpf);
+
+        }
+
+        public bool LoginCliente(string senha, string email)
+        {
+            return rep.LoginCliente(senha, email);
+        }
+
+        public bool LocalizaId(int id)
+        {
+            return rep.LocalizaId(id);
+        }
+
+        public bool EmailCadastrado(string email)
+        {
+            return rep.EmailCadastrado(email);
+        }
+
+        public bool SenhaCadastrada(string senha)
+        {
+            return rep.Senhahash(senha);
+        }
+
+        public void ValidaCliente(Cliente cliente)
+        {
+            if (!CpfCadastrado(cliente.Cpf))
+            {
+                cliente.Senha = CrypSenha(cliente.Senha);
+            }
+        }
 
         public string CrypSenha(string senha)
         {
@@ -68,33 +103,5 @@ namespace FilmesAPI.Services
             }
         }
 
-        public void ValidaCliente(Cliente cliente)
-        {
-            if(!CpfCadastrado(cliente.Cpf))
-            {
-                cliente.Senha = CrypSenha(cliente.Senha);
-            }
-        }
-
-
-        public bool CpfCadastrado(string Cpf)
-        {
-            return rep.CpfCadastrado(Cpf);
-        }
-
-        public bool LoginCliente(string senha, string email)
-        {
-           return rep.LoginCliente(senha,email);
-        }
-
-        public bool LocalizaId(int id)
-        {
-            return rep.LocalizaId(id);
-        }
-
-        public bool EmailCadastrado(string email)
-        {
-            return rep.EmailCadastrado(email);
-        }
     }
 }

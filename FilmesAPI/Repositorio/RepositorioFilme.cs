@@ -30,14 +30,16 @@ namespace FilmesAPI.Repositorio
                     command.Parameters.AddWithValue("@datacadastro", DateTime.Now.ToShortDateString());
                     command.ExecuteNonQuery();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex; // retorna mensagem de erro
-                }
-
-                finally
-                {
-                    connection.Close();
+                    if (dataRead != null)
+                    {
+                        dataRead.Close();
+                    }
+                    else if (connection != null)
+                    {
+                        connection.Close();
+                    }
                 }
             }
         }
@@ -59,15 +61,13 @@ namespace FilmesAPI.Repositorio
                     command.Parameters.AddWithValue("@datacadastro",  DateTime.Now.ToShortDateString());
                     command.ExecuteNonQuery();
                 }
-
-                catch (Exception ex)
+                catch (Exception)
                 {
                     if (filme.Id == filme.Id)
                     {
                         filme.Id++;
                     }
                 }
-
                 finally
                 {
                     connection.Close();
@@ -88,29 +88,28 @@ namespace FilmesAPI.Repositorio
                     command.Parameters.AddWithValue("@id", id);
                     command.ExecuteNonQuery();
                 }
-
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;  // retorna mensagem de erro
-                }
-
-                finally
-                {
-                    connection.Close();
+                    if (dataRead != null)
+                    {
+                        dataRead.Close();
+                    }
+                    else if (connection != null)
+                    {
+                        connection.Close();
+                    }
                 }
             }
         }
 
         public List<Filme> RetornaFilme()
         {
-
             string queryString = @"SELECT f.id, f.titulo, f.genero, f.datacadastro  FROM tb_filme as f";
             Filme filme;
             List<Filme> ListFilme = new List<Filme>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-
                 try
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
@@ -142,7 +141,6 @@ namespace FilmesAPI.Repositorio
                 }
                 return ListFilme;
             }
-
         }
 
         public Filme RetornaFilmeId(int id)
@@ -169,9 +167,8 @@ namespace FilmesAPI.Repositorio
                         };
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
                     if (dataRead != null)
                     {
                         dataRead.Close();
@@ -209,6 +206,31 @@ namespace FilmesAPI.Repositorio
                 connection.Close();
 
                 return resultado;
+            }
+        }
+
+        public bool TituloCadastrado(Filme filme)
+        {
+            string queryString = @"SELECT titulo, genero FROM tb_filme WHERE titulo = @titulo and genero = @genero";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                bool filmeCadastrado = false;
+                SqlCommand command = new SqlCommand(queryString, connection);
+                connection.Open();
+                command.Parameters.AddWithValue("@titulo", filme.Titulo);
+                command.Parameters.AddWithValue("@genero", filme.Genero);
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    filmeCadastrado = true;
+                }
+
+                connection.Close();
+
+                return filmeCadastrado;
             }
         }
 

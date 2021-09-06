@@ -19,7 +19,7 @@ namespace FilmesAPI.Models.ValueObject
         public string LimpaRG(string rg)
         {
             rg = rg.Trim();
-            rg = Regex.Replace(rg, "[^0-9]", "");
+            rg = Regex.Replace(rg, "[^a-zA-Z0-9]", "");
 
             return rg;
         }

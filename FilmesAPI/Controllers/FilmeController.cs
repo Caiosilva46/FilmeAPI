@@ -31,11 +31,10 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Filme> RecuperaFilmeId(int id)
         {
-            if(_serviceFilme.LocalizaId(id) != true)
+            if(!_serviceFilme.LocalizaId(id) || id <= 0) 
             {
                 return BadRequest("Filme não localizado !");
             }
-
             return _serviceFilme.RetornaFilmeId(id);
         }
 
@@ -43,6 +42,10 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(typeof(Filme), StatusCodes.Status201Created)]
         public ActionResult AdicionaFilme(Filme filme)
         {
+            if (_serviceFilme.TituloCadastrado(filme))
+            {
+                return BadRequest("Já existe um filme cadastrado com esse Título e Gênero !");
+            }
             _serviceFilme.AdicionaFilme(filme);
             return CreatedAtAction("adicionafilme", filme);
         }
@@ -52,11 +55,10 @@ namespace FilmesAPI.Controllers
 
         public ActionResult DeletaFilme (int id)
         {
-            if(_serviceFilme.LocalizaId(id) != true)
+            if(!_serviceFilme.LocalizaId(id) || id <= 0)
             {
-                return BadRequest("Cliente não localizado !");
+                return BadRequest("Filme não localizado !");
             }
-
             _serviceFilme.RemoveFilme(id);
 
             return Ok("Item deletado com sucesso!");

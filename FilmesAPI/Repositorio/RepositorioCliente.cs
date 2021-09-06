@@ -13,7 +13,7 @@ namespace FilmesAPI.Repositorio
 {
     public class RepositorioCliente : IRepositorioCliente
     {
-        SqlDataReader dataRead;
+        SqlDataReader dataRead = null;
 
         string connectionString = @"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
@@ -35,16 +35,20 @@ namespace FilmesAPI.Repositorio
                     command.Parameters.AddWithValue("@senha", cliente.Senha);
                     command.ExecuteNonQuery();
                 }
-
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex; // retorna mensagem de erro
+                    if (dataRead != null)
+                    {
+                        dataRead.Close();
+                    }
+                    else if (connection != null)
+                    {
+                        connection.Close();
+                    }
                 }
-
                 finally
                 {
                     connection.Close();
-
                 }
             }
         }
@@ -67,7 +71,6 @@ namespace FilmesAPI.Repositorio
                     command.Parameters.AddWithValue("@senha", cliente.Senha);
                     command.ExecuteNonQuery();
                 }
-
                 catch (Exception)
                 {
                     if (cliente.Id == cliente.Id)
@@ -75,16 +78,12 @@ namespace FilmesAPI.Repositorio
                         cliente.Id++;
                     }
                 }
-
                 finally
                 {
-
                     connection.Close();
                 }
-                
             }
         }
-
 
         public void RemoveCliente(int id)
         {
@@ -99,12 +98,13 @@ namespace FilmesAPI.Repositorio
                     command.Parameters.AddWithValue("@id", id);
                     command.ExecuteNonQuery();
                 }
-
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;
+                    if (connection == null)
+                    {
+                        connection.Close();
+                    }
                 }
-
                 finally
                 {
                     connection.Close();
@@ -137,7 +137,6 @@ namespace FilmesAPI.Repositorio
                             Senha = reader["senha"].ToString(),
                             Id = int.Parse(reader["id"].ToString())
                         };
-
                         ListaDeClientes.Add(cliente);
                     }
                 }
@@ -152,7 +151,6 @@ namespace FilmesAPI.Repositorio
                         connection.Close();
                     }
                 }
-
                 return ListaDeClientes;
             }
         }
@@ -171,10 +169,8 @@ namespace FilmesAPI.Repositorio
                     command.Parameters.AddWithValue("@id", id);
                     SqlDataReader reader = command.ExecuteReader();
 
-
                     while (reader.Read())
                     {
-
                         cliente = new Cliente
                         {
                             Id = int.Parse(reader["id"].ToString()),
@@ -186,12 +182,7 @@ namespace FilmesAPI.Repositorio
                         };
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-
-                finally
+                catch (Exception)
                 {
                     if (dataRead != null)
                     {
@@ -202,7 +193,10 @@ namespace FilmesAPI.Repositorio
                         connection.Close();
                     }
                 }
-
+                finally
+                {
+                    connection.Close();
+                }
                 return cliente;
             }
         }
@@ -218,7 +212,7 @@ namespace FilmesAPI.Repositorio
                 connection.Open();
                 command.Parameters.AddWithValue("@cpf", cpf);
                 SqlDataReader reader = command.ExecuteReader();
-                
+
                 if (reader.HasRows)
                 {
                     reader.Read();
@@ -226,9 +220,7 @@ namespace FilmesAPI.Repositorio
                 }
 
                 connection.Close();
-
                 return cpfCadastrado;
-
             }
         }
 
@@ -253,7 +245,6 @@ namespace FilmesAPI.Repositorio
                 }
 
                 connection.Close();
-
                 return logado;
             }
         }
@@ -274,11 +265,9 @@ namespace FilmesAPI.Repositorio
                 {
                     reader.Read();
                     resultado = true;
-
                 }
 
                 connection.Close();
-
                 return resultado;
             }
         }
@@ -299,15 +288,37 @@ namespace FilmesAPI.Repositorio
                 {
                     reader.Read();
                     emailValido = true;
-
                 }
 
                 connection.Close();
-
                 return emailValido;
+            }
+        }
+
+        public bool Senhahash(string senha)
+        {
+            string queryString = @"SELECT senha FROM tb_cliente WHERE senha = @senha";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                bool senhaCryptografada = false;
+                SqlCommand command = new SqlCommand(queryString, connection);
+                connection.Open();
+                command.Parameters.AddWithValue("@senha", senha);
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    senhaCryptografada = true;
+                }
+
+                connection.Close();
+                return senhaCryptografada;
             }
         }
     }
 }
+
 
 

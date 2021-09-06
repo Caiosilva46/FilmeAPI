@@ -35,5 +35,8 @@ namespace FilmesAPI.Interface
 
         //GET
         bool EmailCadastrado(string email);
+
+        //GET
+        bool SenhaCadastrada(string senha);
     }
 }

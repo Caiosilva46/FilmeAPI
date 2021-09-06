@@ -186,7 +186,7 @@ namespace FilmesAPI.Repositorio
                     }
                 }
 
-                catch (Exception ex)
+                catch (Exception)
                 {
 
                     if (dataRead != null)

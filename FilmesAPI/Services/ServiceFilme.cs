@@ -40,5 +40,10 @@ namespace FilmesAPI.Services
         {
             return rep.LocalizaId(id);
         }
+
+        public bool TituloCadastrado(Filme filme)
+        {
+            return rep.TituloCadastrado(filme);
+        }
     }
 }

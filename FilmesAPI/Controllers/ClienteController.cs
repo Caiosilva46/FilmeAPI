@@ -19,7 +19,6 @@ namespace FilmesAPI.Controllers
     [Route("api/cliente")]
     public class ClienteController : ControllerBase
     {
-
         public readonly ServiceCliente _serviceCliente = new ServiceCliente();
 
         [HttpGet("recuperacliente")]
@@ -31,16 +30,14 @@ namespace FilmesAPI.Controllers
 
         [HttpGet("recuperaclienteid/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<Cliente> RecuperaClienteId(int id)
         {
-
-            if (_serviceCliente.LocalizaId(id) != true)
+            if (!_serviceCliente.LocalizaId(id) || id <= 0)
             {
                 return BadRequest("Cliente não encontrado !");
-            }
-
+            } 
             return _serviceCliente.RetornaClienteId(id);
-
         }
 
         [HttpPost("adicionacliente")]
@@ -60,21 +57,21 @@ namespace FilmesAPI.Controllers
             {
                 return BadRequest("CPF Já cadastrao para outro cliente !");
             }
-            else if(_serviceCliente.EmailCadastrado(cliente.Email))
+            else if (_serviceCliente.EmailCadastrado(cliente.Email))
             {
                 return BadRequest("Email Já cadastrao para outro cliente !");
             }
-            
+
             _serviceCliente.AdicionaCliente(cliente);
             return CreatedAtAction("adicionacliente", cliente);
-
         }
 
         [HttpDelete("deletacliente/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult DeletaCliente(int id)
         {
-            if (_serviceCliente.LocalizaId(id) != true)
+            if (!_serviceCliente.LocalizaId(id) || id <=0)
             {
                 return BadRequest("Cliente não localizado !");
             }
@@ -92,12 +89,19 @@ namespace FilmesAPI.Controllers
             return Ok("Cliente atualizado com sucesso !");
         }
 
-        [HttpPost("logincliente")]
+        [HttpGet("logincliente")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult LoginCliente(string email, string senha)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult LoginCliente(string senha,string email)
         {
-            _serviceCliente.LoginCliente(senha, email);
-            //_serviceCliente.VerificarHash(senha);
+            if (!_serviceCliente.EmailCadastrado(email))
+            {
+                return BadRequest("Email inválido!");
+            } 
+            else if(!_serviceCliente.SenhaCadastrada(senha))
+            {
+                return BadRequest("Senha inválido!");
+            }
             return Ok("Cliente logado com sucesso !");
         }
     }

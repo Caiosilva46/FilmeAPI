@@ -17,6 +17,7 @@ namespace FilmesAPI.Models.ValueObject
         {
             try
             {
+
                 if (!ValidarEmail(email))
                 
                     throw new Exception();

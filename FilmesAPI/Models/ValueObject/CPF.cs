@@ -9,7 +9,7 @@ namespace FilmesAPI.Models.ValueObject
     public class CPF
     {
 
-        public CPF (string cpf)
+        public CPF(string cpf)
         {
             try
             {
@@ -24,17 +24,9 @@ namespace FilmesAPI.Models.ValueObject
             }
             catch (Exception)
             {
-                return Convert.ToBoolean(cpf);
+                throw new Exception();
             }
         }
-
-       /* public bool CpfValidado (string cpf)
-        {
-
-
-            return true;
-        }*/
-
 
         //TODO criar metodo para limpar CPF
         public string LimpaCPF(string cpf)
@@ -80,7 +72,8 @@ namespace FilmesAPI.Models.ValueObject
             if (resultado < 2)
             {
                 resultado = 0; // Se o valor do resto for menor que 2 o resultado irá passar a valer 0
-            } else
+            }
+            else
             {
                 resultado = 11 - resultado; // caso o resultado seja maior que 2, irá pegar o valor do resultado e subtrair 11 Ex: (11-3)
             }

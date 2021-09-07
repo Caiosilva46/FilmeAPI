@@ -89,16 +89,25 @@ namespace FilmesAPI.Controllers
             return Ok("Cliente atualizado com sucesso !");
         }
 
-        [HttpGet("logincliente")]
+        [HttpPost("logincliente")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult LoginCliente(string senha,string email)
+        //public ActionResult LoginCliente([Bind]string email, string senha)
+        public ActionResult LoginCliente(string email, string senha)
         {
-            if (!_serviceCliente.EmailCadastrado(email))
+            if (email == null || senha == null)
+            {
+                return BadRequest("Email e senha precisam ser informados!");
+            }
+
+            if (!_serviceCliente.EmailCadastrado(senha))
             {
                 return BadRequest("Email inválido!");
-            } 
-            else if(!_serviceCliente.SenhaCadastrada(senha))
+            }
+
+            var senhaCadastrada = _serviceCliente.CrypSenha(senha);
+
+            if (!_serviceCliente.SenhaCadastrada(senhaCadastrada))
             {
                 return BadRequest("Senha inválido!");
             }

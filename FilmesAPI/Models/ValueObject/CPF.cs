@@ -8,7 +8,6 @@ namespace FilmesAPI.Models.ValueObject
 {
     public class CPF
     {
-
         public CPF(string cpf)
         {
             try
@@ -20,11 +19,10 @@ namespace FilmesAPI.Models.ValueObject
                 //metodo que verificar CPF (cpf)    
                 if (!VerificarCPf(cpf))
                     throw new Exception();
-
             }
             catch (Exception)
             {
-                throw new Exception();
+                throw new Exception("O CPF informando não é válido" + cpf);
             }
         }
 

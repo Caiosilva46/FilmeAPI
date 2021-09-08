@@ -29,7 +29,6 @@ namespace FilmesAPI.Services
         {
             rep.RemoveCliente(id);
         }
-
         public Cliente RetornaClienteId(int id)
         {
             return rep.RetornaClienteId(id);
@@ -40,21 +39,15 @@ namespace FilmesAPI.Services
             return rep.RetornaCliente();
         }
 
+        public bool LocalizaId(int id)
+        {
+            return rep.LocalizaId(id);
+        }
 
         public bool CpfCadastrado(string Cpf)
         {
             return rep.CpfCadastrado(Cpf);
 
-        }
-
-        public bool LoginCliente(string senha, string email)
-        {
-            return rep.LoginCliente(senha, email);
-        }
-
-        public bool LocalizaId(int id)
-        {
-            return rep.LocalizaId(id);
         }
 
         public bool EmailCadastrado(string email)
@@ -64,12 +57,12 @@ namespace FilmesAPI.Services
 
         public bool SenhaCadastrada(string senha)
         {
-            return rep.Senhahash(senha);
+            return rep.SenhaCadastrada(senha);
         }
 
         public void ValidaCliente(Cliente cliente)
         {
-            if (!CpfCadastrado(cliente.Cpf))
+            if (!CpfCadastrado(Convert.ToString(cliente.Cpf)))
             {
                 cliente.Senha = CrypSenha(cliente.Senha);
             }

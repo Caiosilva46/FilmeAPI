@@ -27,7 +27,6 @@ namespace FilmesAPI.Repositorio
                     command.Parameters.AddWithValue("@id", filme.Id);
                     command.Parameters.AddWithValue("@titulo", filme.Titulo);
                     command.Parameters.AddWithValue("@genero", filme.Genero);
-                    command.Parameters.AddWithValue("@datacadastro", DateTime.Now.ToShortDateString());
                     command.ExecuteNonQuery();
                 }
                 catch (Exception)
@@ -36,10 +35,10 @@ namespace FilmesAPI.Repositorio
                     {
                         dataRead.Close();
                     }
-                    else if (connection != null)
-                    {
-                        connection.Close();
-                    }
+                }
+                finally
+                {
+                    connection.Close();
                 }
             }
         }
@@ -58,7 +57,7 @@ namespace FilmesAPI.Repositorio
                     command.Parameters.AddWithValue("@id", filme.Id);
                     command.Parameters.AddWithValue("@titulo", filme.Titulo);
                     command.Parameters.AddWithValue("@genero", filme.Genero);
-                    command.Parameters.AddWithValue("@datacadastro",  DateTime.Now.ToShortDateString());
+                    command.Parameters.AddWithValue("@datacadastro", DateTime.Now.ToShortDateString());
                     command.ExecuteNonQuery();
                 }
                 catch (Exception)
@@ -94,10 +93,10 @@ namespace FilmesAPI.Repositorio
                     {
                         dataRead.Close();
                     }
-                    else if (connection != null)
-                    {
-                        connection.Close();
-                    }
+                }
+                finally
+                {
+                    connection.Close();
                 }
             }
         }
@@ -145,7 +144,7 @@ namespace FilmesAPI.Repositorio
 
         public Filme RetornaFilmeId(int id)
         {
-            string queryString = @"SELECT f.id, f.titulo, f.genero, f.datacadastro FROM tb_filme as f WHERE id = @id";
+            string queryString = @"SELECT id, titulo, genero, datacadastro FROM tb_filme WHERE id = @id";
             Filme filme = null;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -154,6 +153,7 @@ namespace FilmesAPI.Repositorio
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
+                    command.Parameters.AddWithValue("@id", id);
                     SqlDataReader reader = command.ExecuteReader();
 
                     while (reader.Read())
@@ -173,16 +173,14 @@ namespace FilmesAPI.Repositorio
                     {
                         dataRead.Close();
                     }
-                    else if (connection != null)
-                    {
-                        connection.Close();
-                    }
+                }
+                finally
+                {
+                    connection.Close();
                 }
 
                 return filme;
-
             }
-
         }
 
         public bool LocalizaId(int id)
@@ -233,7 +231,6 @@ namespace FilmesAPI.Repositorio
                 return filmeCadastrado;
             }
         }
-
     }
 }
 

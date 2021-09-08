@@ -26,9 +26,6 @@ namespace FilmesAPI.Interface
 
         //GET
         bool CpfCadastrado(string cpf);
-
-        //GET
-        bool LoginCliente(string senha, string email);
        
         //GET
         bool LocalizaId(int id);
@@ -37,6 +34,6 @@ namespace FilmesAPI.Interface
         bool EmailCadastrado(string email);
 
         //GET
-        bool Senhahash(string senha);
+        bool SenhaCadastrada(string senha);
     }
 }

@@ -26,10 +26,7 @@ namespace FilmesAPI.Interface
 
         //GET 
         bool CpfCadastrado(string cpf);
-
-        //GET
-        bool LoginCliente(string senha, string email);
-
+     
         //GETINFO
         bool LocalizaId(int id);
 

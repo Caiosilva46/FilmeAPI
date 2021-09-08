@@ -45,19 +45,19 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult AdicionaCliente(Cliente cliente)
         {
-            CPF cpf = new CPF(cliente.Cpf);
+            CPF cpf = new(cliente.Cpf.ToString());
 
-            Email email = new Email(cliente.Email);
+            Email email = new(cliente.Email.ToString());
 
-            RG rg = new RG(cliente.RG);
+            RG rg = new(cliente.Rg.ToString());
 
             _serviceCliente.ValidaCliente(cliente);
 
-            if (_serviceCliente.CpfCadastrado(cliente.Cpf))
+            if (_serviceCliente.CpfCadastrado(cliente.Cpf.ToString()))
             {
                 return BadRequest("CPF Já cadastrao para outro cliente !");
             }
-            else if (_serviceCliente.EmailCadastrado(cliente.Email))
+            else if (_serviceCliente.EmailCadastrado(cliente.Email.ToString()))
             {
                 return BadRequest("Email Já cadastrao para outro cliente !");
             }
@@ -92,26 +92,25 @@ namespace FilmesAPI.Controllers
         [HttpPost("logincliente")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public ActionResult LoginCliente([Bind]string email, string senha)
-        public ActionResult LoginCliente(string email, string senha)
+        public ActionResult LoginCliente([FromBody] Cliente cliente)
         {
-            if (email == null || senha == null)
-            {
-                return BadRequest("Email e senha precisam ser informados!");
-            }
+                if (string.IsNullOrEmpty(cliente.Email.ToString()) && string.IsNullOrEmpty(cliente.Senha))
+                {
+                    return BadRequest("Email e senha precisam ser informados!");
+                }
 
-            if (!_serviceCliente.EmailCadastrado(senha))
-            {
-                return BadRequest("Email inválido!");
-            }
+                if (!_serviceCliente.EmailCadastrado(cliente.Email.ToString()))
+                {
+                    return BadRequest("Email inválido!");
+                }
 
-            var senhaCadastrada = _serviceCliente.CrypSenha(senha);
+                var senhaHash = _serviceCliente.CrypSenha(cliente.Senha);
 
-            if (!_serviceCliente.SenhaCadastrada(senhaCadastrada))
-            {
-                return BadRequest("Senha inválido!");
-            }
-            return Ok("Cliente logado com sucesso !");
+                if (!_serviceCliente.SenhaCadastrada(senhaHash))
+                {
+                    return BadRequest("Senha inválido!");
+                }
+                return Ok("Cliente logado com sucesso !");
         }
     }
 }

@@ -30,7 +30,7 @@ namespace FilmesAPI.Repositorio
                     command.Parameters.AddWithValue("@Id", cliente.Id);
                     command.Parameters.AddWithValue("@nome", cliente.Nome);
                     command.Parameters.AddWithValue("@cpf", cliente.Cpf);
-                    command.Parameters.AddWithValue("@rg", cliente.RG);
+                    command.Parameters.AddWithValue("@rg", cliente.Rg);
                     command.Parameters.AddWithValue("@email", cliente.Email);
                     command.Parameters.AddWithValue("@senha", cliente.Senha);
                     command.ExecuteNonQuery();
@@ -63,13 +63,14 @@ namespace FilmesAPI.Repositorio
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
-                    command.Parameters.AddWithValue("@id", cliente.Id);
-                    command.Parameters.AddWithValue("@nome", cliente.Nome);
-                    command.Parameters.AddWithValue("@cpf", cliente.Cpf);
-                    command.Parameters.AddWithValue("@rg", cliente.RG);
-                    command.Parameters.AddWithValue("@email", cliente.Email);
-                    command.Parameters.AddWithValue("@senha", cliente.Senha);
+                    command.Parameters.AddWithValue("@id", string.Join(",",cliente.Id));
+                    command.Parameters.AddWithValue("@nome", string.Join(",", cliente.Nome));
+                    command.Parameters.AddWithValue("@cpf", string.Join(",", cliente.Cpf));
+                    command.Parameters.AddWithValue("@rg", string.Join(",", cliente.Rg));
+                    command.Parameters.AddWithValue("@email", string.Join(",", cliente.Email));
+                    command.Parameters.AddWithValue("@senha", string.Join(",", cliente.Senha));
                     command.ExecuteNonQuery();
+
                 }
                 catch (Exception)
                 {
@@ -78,10 +79,8 @@ namespace FilmesAPI.Repositorio
                         cliente.Id++;
                     }
                 }
-                finally
-                {
-                    connection.Close();
-                }
+
+                connection.Close();
             }
         }
 
@@ -130,12 +129,12 @@ namespace FilmesAPI.Repositorio
                     {
                         cliente = new Cliente
                         {
+                            Id = int.Parse(reader["id"].ToString()),
                             Nome = reader["nome"].ToString(),
-                            Cpf = Convert.ToString(reader["cpf"]),
-                            RG = Convert.ToString(reader["rg"]),
-                            Email = Convert.ToString(reader["email"]),
-                            Senha = reader["senha"].ToString(),
-                            Id = int.Parse(reader["id"].ToString())
+                            Cpf = reader["cpf"].ToString(),
+                            Rg = reader["rg"].ToString(),
+                            Email = reader["email"].ToString(),
+                            Senha = reader["senha"].ToString()
                         };
                         ListaDeClientes.Add(cliente);
                     }
@@ -175,9 +174,9 @@ namespace FilmesAPI.Repositorio
                         {
                             Id = int.Parse(reader["id"].ToString()),
                             Nome = reader["nome"].ToString(),
-                            Cpf = Convert.ToString(reader["cpf"]),
-                            RG = Convert.ToString(reader["rg"]),
-                            Email = Convert.ToString(reader["email"]),
+                            Cpf = reader["cpf"].ToString(),
+                            Rg = reader["rg"].ToString(),
+                            Email = reader["email"].ToString(),
                             Senha = reader["senha"].ToString(),
                         };
                     }
@@ -221,31 +220,6 @@ namespace FilmesAPI.Repositorio
 
                 connection.Close();
                 return cpfCadastrado;
-            }
-        }
-
-        public bool LoginCliente(string senha, string email)
-        {
-            string queryString = @"SELECT email, senha FROM tb_cliente WHERE email = @email AND senha = @senha";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-
-                bool logado = false;
-                SqlCommand command = new SqlCommand(queryString, connection);
-                connection.Open();
-                command.Parameters.AddWithValue("@email", email);
-                command.Parameters.AddWithValue("@senha", senha);
-                SqlDataReader reader = command.ExecuteReader();
-
-                if (reader.HasRows)
-                {
-                    reader.Read();
-                    logado = true;
-                }
-
-                connection.Close();
-                return logado;
             }
         }
 
@@ -295,7 +269,7 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public bool Senhahash(string senha)
+        public bool SenhaCadastrada(string senha)
         {
             string queryString = @"SELECT senha FROM tb_cliente WHERE senha = @senha";
 

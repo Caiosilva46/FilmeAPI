@@ -8,16 +8,10 @@ namespace FilmesAPI.Models.ValueObject
 {
     public class Email
     {
-        public Email()
-        {
-
-        }
-
         public Email(string email)
         {
             try
             {
-
                 if (!ValidarEmail(email))
                 
                     throw new Exception();

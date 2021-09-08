@@ -8,13 +8,11 @@ namespace FilmesAPI.Models.ValueObject
 {
     public class RG
     {
-
         public RG(string rg)
         {
             rg = LimpaRG(rg);
             rg = ValidarRg(rg);
         }
-
 
         public string LimpaRG(string rg)
         {
@@ -23,12 +21,11 @@ namespace FilmesAPI.Models.ValueObject
 
             return rg;
         }
+
         public string ValidarRg(string rg)
         {
             string novorg = rg.PadLeft(9, '0');
             return novorg;
         }
-
-
     }
 }

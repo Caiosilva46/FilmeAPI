@@ -17,95 +17,6 @@ namespace FilmesAPI.Repositorio
 
         string connectionString = @"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
-        public void AtualizaCliente(Cliente cliente)
-        {
-            string queryString = @"UPDATE tb_cliente SET nome = @nome, cpf = @cpf, rg = @rg, email = @email, senha = @senha WHERE id = @id";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    SqlCommand command = new SqlCommand(queryString, connection);
-                    connection.Open();
-                    command.Parameters.AddWithValue("@id", string.Join(",", cliente.Id));
-                    command.Parameters.AddWithValue("@nome", string.Join(",", cliente.Nome));
-                    command.Parameters.AddWithValue("@cpf", string.Join(",", cliente.Cpf));
-                    command.Parameters.AddWithValue("@rg", string.Join(",", cliente.Rg));
-                    command.Parameters.AddWithValue("@email", string.Join(",", cliente.Email));
-                    command.Parameters.AddWithValue("@senha", string.Join(",", cliente.Senha));
-                    command.ExecuteNonQuery();
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-                finally
-                {
-                    connection.Close();
-                }
-            }
-        }
-
-        public void AdicionaCliente(Cliente cliente)
-        {
-            string queryString = @"INSERT INTO tb_cliente (id, nome, cpf, rg, email, senha) VALUES (@id ,@nome ,@cpf, @rg, @email, @senha)";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    SqlCommand command = new SqlCommand(queryString, connection);
-                    connection.Open();
-                    command.Parameters.AddWithValue("@id", string.Join(",", cliente.Id));
-                    command.Parameters.AddWithValue("@nome", string.Join(",", cliente.Nome));
-                    command.Parameters.AddWithValue("@cpf", string.Join(",", cliente.Cpf));
-                    command.Parameters.AddWithValue("@rg", string.Join(",", cliente.Rg));
-                    command.Parameters.AddWithValue("@email", string.Join(",", cliente.Email));
-                    command.Parameters.AddWithValue("@senha", string.Join(",", cliente.Senha));
-                    command.ExecuteNonQuery();
-
-                }
-                catch (Exception)
-                {
-                    if (cliente.Id == cliente.Id)
-                    {
-                        cliente.Id++;
-                    }
-                }
-                finally
-                {
-                    connection.Close();
-                }
-            }
-        }
-
-        public void RemoveCliente(int id)
-        {
-            string queryString = @"DELETE FROM tb_cliente WHERE id = @id";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    SqlCommand command = new SqlCommand(queryString, connection);
-                    connection.Open();
-                    command.Parameters.AddWithValue("@id", id);
-                    command.ExecuteNonQuery();
-                }
-                catch (Exception)
-                {
-                    if (connection == null)
-                    {
-                        connection.Close();
-                    }
-                }
-                finally
-                {
-                    connection.Close();
-                }
-            }
-        }
-
         public List<Cliente> RetornaCliente()
         {
             string queryString = @"SELECT c.id, c.nome, c.cpf, c.rg, c.email, c.senha FROM tb_cliente as c";
@@ -191,26 +102,92 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public bool CpfCadastrado(string cpf)
+        public void AdicionaCliente(Cliente cliente)
         {
-            string queryString = @"SELECT cpf FROM tb_cliente WHERE cpf = @cpf";
+            string queryString = @"INSERT INTO tb_cliente (id, nome, cpf, rg, email, senha) VALUES (@id ,@nome ,@cpf, @rg, @email, @senha)";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                bool cpfCadastrado = false;
-                SqlCommand command = new SqlCommand(queryString, connection);
-                connection.Open();
-                command.Parameters.AddWithValue("@cpf", cpf);
-                SqlDataReader reader = command.ExecuteReader();
-
-                if (reader.HasRows)
+                try
                 {
-                    reader.Read();
-                    cpfCadastrado = true;
-                }
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    command.Parameters.AddWithValue("@id", string.Join(",", cliente.Id));
+                    command.Parameters.AddWithValue("@nome", string.Join(",", cliente.Nome));
+                    command.Parameters.AddWithValue("@cpf", string.Join(",", cliente.Cpf));
+                    command.Parameters.AddWithValue("@rg", string.Join(",", cliente.Rg));
+                    command.Parameters.AddWithValue("@email", string.Join(",", cliente.Email));
+                    command.Parameters.AddWithValue("@senha", string.Join(",", cliente.Senha));
+                    command.ExecuteNonQuery();
 
-                connection.Close();
-                return cpfCadastrado;
+                }
+                catch (Exception)
+                {
+                    if (cliente.Id == cliente.Id)
+                    {
+                        cliente.Id++;
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        public void AtualizaCliente(Cliente cliente)
+        {
+            string queryString = @"UPDATE tb_cliente SET nome = @nome, cpf = @cpf, rg = @rg, email = @email, senha = @senha WHERE id = @id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    command.Parameters.AddWithValue("@id", string.Join(",", cliente.Id));
+                    command.Parameters.AddWithValue("@nome", string.Join(",", cliente.Nome));
+                    command.Parameters.AddWithValue("@cpf", string.Join(",", cliente.Cpf));
+                    command.Parameters.AddWithValue("@rg", string.Join(",", cliente.Rg));
+                    command.Parameters.AddWithValue("@email", string.Join(",", cliente.Email));
+                    command.Parameters.AddWithValue("@senha", string.Join(",", cliente.Senha));
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        public void RemoveCliente(int id)
+        {
+            string queryString = @"DELETE FROM tb_cliente WHERE id = @id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    command.Parameters.AddWithValue("@id", id);
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                    if (connection == null)
+                    {
+                        connection.Close();
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
 
@@ -234,6 +211,29 @@ namespace FilmesAPI.Repositorio
 
                 connection.Close();
                 return resultado;
+            }
+        }
+
+        public bool CpfCadastrado(string cpf)
+        {
+            string queryString = @"SELECT cpf FROM tb_cliente WHERE cpf = @cpf";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                bool cpfCadastrado = false;
+                SqlCommand command = new SqlCommand(queryString, connection);
+                connection.Open();
+                command.Parameters.AddWithValue("@cpf", cpf);
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    cpfCadastrado = true;
+                }
+
+                connection.Close();
+                return cpfCadastrado;
             }
         }
 

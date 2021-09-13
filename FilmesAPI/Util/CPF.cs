@@ -5,14 +5,14 @@ namespace FilmesAPI.Models.ValueObject
 {
     public class CPF
     {
+        public string cpfValido = string.Empty;
         public CPF()
         {
-
+            
         }
 
         public string ValidaCpf(string cpf)
         {
-            string cpfValido = string.Empty;
             try
             {
                 cpfValido = LimpaCPF(cpf);

@@ -14,92 +14,6 @@ namespace FilmesAPI.Repositorio
         string connectionString = @"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
         SqlDataReader dataRead = null;
-        public void AtualizaFilme(Filme filme)
-        {
-            string queryString = @"UPDATE tb_filme SET titulo = @titulo, genero = @genero  WHERE id = @id";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    SqlCommand command = new SqlCommand(queryString, connection);
-                    connection.Open();
-                    command.Parameters.AddWithValue("@id", filme.Id);
-                    command.Parameters.AddWithValue("@titulo", filme.Titulo);
-                    command.Parameters.AddWithValue("@genero", filme.Genero);
-                    command.ExecuteNonQuery();
-                }
-                catch (Exception)
-                {
-                    if (dataRead != null)
-                    {
-                        dataRead.Close();
-                    }
-                }
-                finally
-                {
-                    connection.Close();
-                }
-            }
-        }
-
-        public void AdicionaFilme(Filme filme)
-        {
-
-            string queryString = @"INSERT INTO tb_filme (id, titulo, genero, datacadastro) VALUES (@id, @titulo, @genero, @datacadastro)";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    SqlCommand command = new SqlCommand(queryString, connection);
-                    connection.Open();
-                    command.Parameters.AddWithValue("@id", filme.Id);
-                    command.Parameters.AddWithValue("@titulo", filme.Titulo);
-                    command.Parameters.AddWithValue("@genero", filme.Genero);
-                    command.Parameters.AddWithValue("@datacadastro", DateTime.Now.ToShortDateString());
-                    command.ExecuteNonQuery();
-                }
-                catch (Exception)
-                {
-                    if (filme.Id == filme.Id)
-                    {
-                        filme.Id++;
-                    }
-                }
-                finally
-                {
-                    connection.Close();
-                }
-            }
-        }
-
-        public void RemoveFilme(int id)
-        {
-            string queryString = @"DELETE FROM tb_filme WHERE id = @id";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    SqlCommand command = new SqlCommand(queryString, connection);
-                    connection.Open();
-                    command.Parameters.AddWithValue("@id", id);
-                    command.ExecuteNonQuery();
-                }
-                catch (Exception)
-                {
-                    if (dataRead != null)
-                    {
-                        dataRead.Close();
-                    }
-                }
-                finally
-                {
-                    connection.Close();
-                }
-            }
-        }
 
         public List<Filme> RetornaFilme()
         {
@@ -144,7 +58,7 @@ namespace FilmesAPI.Repositorio
 
         public Filme RetornaFilmeId(int id)
         {
-            string queryString = @"SELECT id, titulo, genero, datacadastro FROM tb_filme WHERE id = @id";
+            string queryString = @"SELECT f.id, f.titulo, f.genero, f.datacadastro FROM tb_filme as f WHERE id = @id";
             Filme filme = null;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -180,6 +94,92 @@ namespace FilmesAPI.Repositorio
                 }
 
                 return filme;
+            }
+        }
+
+        public void AdicionaFilme(Filme filme)
+        {
+            string queryString = @"INSERT INTO tb_filme (id, titulo, genero, datacadastro) VALUES (@id, @titulo, @genero, @datacadastro)";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    command.Parameters.AddWithValue("@id", filme.Id);
+                    command.Parameters.AddWithValue("@titulo", filme.Titulo);
+                    command.Parameters.AddWithValue("@genero", filme.Genero);
+                    command.Parameters.AddWithValue("@datacadastro", DateTime.Now.ToShortDateString());
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                    if (filme.Id == filme.Id)
+                    {
+                        filme.Id++;
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        public void AtualizaFilme(Filme filme)
+        {
+            string queryString = @"UPDATE tb_filme SET titulo = @titulo, genero = @genero  WHERE id = @id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    command.Parameters.AddWithValue("@id", filme.Id);
+                    command.Parameters.AddWithValue("@titulo", filme.Titulo);
+                    command.Parameters.AddWithValue("@genero", filme.Genero);
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                    if (dataRead != null)
+                    {
+                        dataRead.Close();
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        public void RemoveFilme(int id)
+        {
+            string queryString = @"DELETE FROM tb_filme WHERE id = @id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    command.Parameters.AddWithValue("@id", id);
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                    if (dataRead != null)
+                    {
+                        dataRead.Close();
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
 

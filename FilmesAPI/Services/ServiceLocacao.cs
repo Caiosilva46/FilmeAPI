@@ -12,6 +12,16 @@ namespace FilmesAPI.Services
     {
         private readonly RepositorioLocacao rep = new RepositorioLocacao();
 
+        public List<Locacao> RetornaLocacao()
+        {
+            return rep.RetornaLocacao();
+        }
+
+        public Locacao RetornaLocacaoId(int id)
+        {
+            return rep.RetornaLocacaoId(id);
+        }
+
         public void AdicionaLocacao(Locacao locacao)
         {
             rep.AdicionaLocacao(locacao);
@@ -25,16 +35,6 @@ namespace FilmesAPI.Services
         public void RemoveLocacao(int id)
         {
             rep.RemoveLocacao(id);
-        }
-
-        public List<Locacao> RetornaLocacao()
-        {
-            return rep.RetornaLocacao();
-        }
-
-        public Locacao RetornaLocacaoId(int id)
-        {
-            return rep.RetornaLocacaoId(id);
         }
     }
 }

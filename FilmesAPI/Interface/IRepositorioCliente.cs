@@ -9,27 +9,27 @@ namespace FilmesAPI.Interface
 {
     public interface IRepositorioCliente
     {
-        //PUT
-        void AtualizaCliente(Cliente cliente);
-
-        //POST
-        void AdicionaCliente(Cliente cliente);
-
-        //DELETE
-        void RemoveCliente(int id);
-
         //GET
         List<Cliente> RetornaCliente();
 
         //GETID
         Cliente RetornaClienteId(int id);
 
-        //GET
-        bool CpfCadastrado(string cpf);
-       
+        //POST
+        void AdicionaCliente(Cliente cliente);
+
+        //PUT
+        void AtualizaCliente(Cliente cliente);
+
+        //DELETE
+        void RemoveCliente(int id);
+
         //GET
         bool LocalizaId(int id);
 
+        //GET
+        bool CpfCadastrado(string cpf);
+       
         //GET
         bool EmailCadastrado(string email);
 

@@ -11,12 +11,10 @@ namespace FilmesAPI.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage ="O campo título é obrigatório")]
         [StringLength(30, MinimumLength =2, ErrorMessage ="O Título deve conter no máximo 30 caracteres e minimo de 2 caracteres.")]
         [RegularExpression(@"^[0-9a-zA-Z''-'\s]{1,30}$", ErrorMessage = "O título não pode conter caractéres especiais")]
         public string Titulo { get; set; }
 
-        [Required(ErrorMessage ="O campo gênero é obrigatório")]
         [StringLength(20,MinimumLength =3, ErrorMessage = "O Gênero deve conter no máximo 20 caracteres e no mínimo 3 caracteres.")]
         [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "O Gênero não pode conter números ou caracteres especiais")]
         public string Genero { get; set; }

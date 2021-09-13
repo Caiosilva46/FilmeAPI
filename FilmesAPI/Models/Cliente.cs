@@ -29,6 +29,5 @@ namespace FilmesAPI.Models
         public string Senha { get; set; }
 
         public ICollection<Locacao> Locacao { get; set; }
-
     }
 }

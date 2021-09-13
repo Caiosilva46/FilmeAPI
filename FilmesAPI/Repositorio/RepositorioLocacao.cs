@@ -15,88 +15,6 @@ namespace FilmesAPI.Repositorio
 
         SqlDataReader dataRead = null;
 
-        public void AtualizaLocacao(Locacao locacao)
-        {
-            string queryString = @"UPDATE tb_locacao SET titulo = @titulo, valor = @valor, dataRetirada = @dataRetirada, dataDevolucao = @dataDevolucao WHERE Id = @Id";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    SqlCommand command = new SqlCommand(queryString, connection);
-                    connection.Open();
-                    command.Parameters.AddWithValue("@Id", locacao.Id);
-                    command.Parameters.AddWithValue("@titulo", locacao.Titulo);
-                    command.Parameters.AddWithValue("@valor", locacao.Valor);
-                    command.Parameters.AddWithValue("@dataRetirada", DateTime.Now.ToShortDateString());
-                    command.Parameters.AddWithValue("@dataDevolucao", locacao.DataDevolucao);
-                    command.ExecuteNonQuery();
-                }
-
-                catch (Exception)
-                {
-                    throw;
-                }
-
-                finally
-                {
-                    connection.Close();
-                }
-            }
-        }
-
-        public void AdicionaLocacao(Locacao locacao)
-        {
-            string queryString = @"INSERT INTO tb_locacao (Id, titulo, valor, dataRetirada, dataDevolucao) VALUES (@Id, @titulo, @valor, @dataRetirada, @dataDevolucao)";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    SqlCommand command = new SqlCommand(queryString, connection);
-                    connection.Open();
-                    command.Parameters.AddWithValue("@Id", locacao.Id);
-                    command.Parameters.AddWithValue("@titulo", locacao.Titulo);
-                    command.Parameters.AddWithValue("@valor", locacao.Valor);
-                    command.Parameters.AddWithValue("@dataRetirada", DateTime.Now.ToShortDateString());
-                    command.Parameters.AddWithValue("@dataDevolucao", DateTime.Now.ToShortDateString());
-                    command.ExecuteNonQuery();
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-                finally
-                {
-                    connection.Close();
-                }
-            }
-        }
-
-        public void RemoveLocacao(int id)
-        {
-            string queryString = @"DELETE FROM tb_locacao WHERE Id = @Id";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    SqlCommand command = new SqlCommand(queryString, connection);
-                    connection.Open();
-                    command.Parameters.AddWithValue("@Id", id);
-                    command.ExecuteNonQuery();
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-                finally
-                {
-                    connection.Close();
-                }
-            }
-        }
-
         public List<Locacao> RetornaLocacao()
         {
             string queryString = @"SELECT Id, titulo, valor, dataRetirada, dataDevolucao, filmeId, clienteId FROM tb_locacao";
@@ -119,7 +37,7 @@ namespace FilmesAPI.Repositorio
                             Titulo = reader["titulo"].ToString(),
                             Valor = Convert.ToDecimal(reader["valor"].ToString()),
                             DataRetirada = Convert.ToDateTime(reader["dataRetirada"].ToString()),
-                             DataDevolucao = Convert.ToDateTime(reader["dataDevolucao"].ToString()),
+                            DataDevolucao = Convert.ToDateTime(reader["dataDevolucao"].ToString()),
                             ClienteId = Convert.ToInt32(reader["clienteId"].ToString()),
                             FilmeId = Convert.ToInt32(reader["filmeId"].ToString())
                         };
@@ -127,10 +45,8 @@ namespace FilmesAPI.Repositorio
                         ListaLocacao.Add(locacao);
                     }
                 }
-
                 catch (Exception)
                 {
-
                     throw;
                 }
 
@@ -184,6 +100,88 @@ namespace FilmesAPI.Repositorio
                 }
 
                 return locacao;
+            }
+        }
+
+        public void AdicionaLocacao(Locacao locacao)
+        {
+            string queryString = @"INSERT INTO tb_locacao (Id, titulo, valor, dataRetirada, dataDevolucao) VALUES (@Id, @titulo, @valor, @dataRetirada, @dataDevolucao)";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    command.Parameters.AddWithValue("@Id", locacao.Id);
+                    command.Parameters.AddWithValue("@titulo", locacao.Titulo);
+                    command.Parameters.AddWithValue("@valor", locacao.Valor);
+                    command.Parameters.AddWithValue("@dataRetirada", DateTime.Now.ToShortDateString());
+                    command.Parameters.AddWithValue("@dataDevolucao", DateTime.Now.ToShortDateString());
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        public void AtualizaLocacao(Locacao locacao)
+        {
+            string queryString = @"UPDATE tb_locacao SET titulo = @titulo, valor = @valor, dataRetirada = @dataRetirada, dataDevolucao = @dataDevolucao WHERE Id = @Id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    command.Parameters.AddWithValue("@Id", locacao.Id);
+                    command.Parameters.AddWithValue("@titulo", locacao.Titulo);
+                    command.Parameters.AddWithValue("@valor", locacao.Valor);
+                    command.Parameters.AddWithValue("@dataRetirada", DateTime.Now.ToShortDateString());
+                    command.Parameters.AddWithValue("@dataDevolucao", locacao.DataDevolucao);
+                    command.ExecuteNonQuery();
+                }
+
+                catch (Exception)
+                {
+                    throw;
+                }
+
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        public void RemoveLocacao(int id)
+        {
+            string queryString = @"DELETE FROM tb_locacao WHERE Id = @Id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    connection.Open();
+                    command.Parameters.AddWithValue("@Id", id);
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
     }

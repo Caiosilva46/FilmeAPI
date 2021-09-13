@@ -19,7 +19,7 @@ namespace FilmesAPI.Repositorio
 
         public void AtualizaCliente(Cliente cliente)
         {
-            string queryString = @"UPDATE tb_cliente SET nome = @nome, rg = @rg, email = @email, senha = @senha WHERE Id = @Id";
+            string queryString = @"UPDATE tb_cliente SET nome = @nome, cpf = @cpf, rg = @rg, email = @email, senha = @senha WHERE id = @id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -27,24 +27,17 @@ namespace FilmesAPI.Repositorio
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
-                    command.Parameters.AddWithValue("@Id", cliente.Id);
-                    command.Parameters.AddWithValue("@nome", cliente.Nome);
-                    command.Parameters.AddWithValue("@cpf", cliente.Cpf);
-                    command.Parameters.AddWithValue("@rg", cliente.Rg);
-                    command.Parameters.AddWithValue("@email", cliente.Email);
-                    command.Parameters.AddWithValue("@senha", cliente.Senha);
+                    command.Parameters.AddWithValue("@id", string.Join(",", cliente.Id));
+                    command.Parameters.AddWithValue("@nome", string.Join(",", cliente.Nome));
+                    command.Parameters.AddWithValue("@cpf", string.Join(",", cliente.Cpf));
+                    command.Parameters.AddWithValue("@rg", string.Join(",", cliente.Rg));
+                    command.Parameters.AddWithValue("@email", string.Join(",", cliente.Email));
+                    command.Parameters.AddWithValue("@senha", string.Join(",", cliente.Senha));
                     command.ExecuteNonQuery();
                 }
                 catch (Exception)
                 {
-                    if (dataRead != null)
-                    {
-                        dataRead.Close();
-                    }
-                    else if (connection != null)
-                    {
-                        connection.Close();
-                    }
+                    throw;
                 }
                 finally
                 {
@@ -63,7 +56,7 @@ namespace FilmesAPI.Repositorio
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
-                    command.Parameters.AddWithValue("@id", string.Join(",",cliente.Id));
+                    command.Parameters.AddWithValue("@id", string.Join(",", cliente.Id));
                     command.Parameters.AddWithValue("@nome", string.Join(",", cliente.Nome));
                     command.Parameters.AddWithValue("@cpf", string.Join(",", cliente.Cpf));
                     command.Parameters.AddWithValue("@rg", string.Join(",", cliente.Rg));
@@ -79,8 +72,10 @@ namespace FilmesAPI.Repositorio
                         cliente.Id++;
                     }
                 }
-
-                connection.Close();
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
 
@@ -186,10 +181,6 @@ namespace FilmesAPI.Repositorio
                     if (dataRead != null)
                     {
                         dataRead.Close();
-                    }
-                    else if (connection != null)
-                    {
-                        connection.Close();
                     }
                 }
                 finally

@@ -8,10 +8,27 @@ namespace FilmesAPI.Models.ValueObject
 {
     public class RG
     {
-        public RG(string rg)
+        public RG()
         {
-            rg = LimpaRG(rg);
-            rg = ValidarRg(rg);
+            
+        }
+
+        public string ValidaRg(string rg)
+        {
+            string rgValido = string.Empty;
+            try
+            {
+                rgValido = LimpaRG(rg);
+
+                rgValido = ValidarRg(rgValido);
+
+            }
+            catch (Exception)
+            {
+                throw new Exception("O Rg informando não é válido" + rgValido);
+            }
+
+            return rgValido;
         }
 
         public string LimpaRG(string rg)

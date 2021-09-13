@@ -27,7 +27,7 @@ namespace FilmesAPI.Controllers
             return _serviceLocacao.RetornaLocacao();
         }
 
-        [HttpGet("recuperacacaoid/{id}")]
+        [HttpGet("recuperalocacaoid/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public Locacao RetornaLocacaoId(int id)
         {

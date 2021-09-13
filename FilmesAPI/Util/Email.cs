@@ -8,12 +8,17 @@ namespace FilmesAPI.Models.ValueObject
 {
     public class Email
     {
-        public Email(string email)
+        public Email()
+        {
+            
+        }
+
+        public string ValidaEmail (string email)
         {
             try
             {
                 if (!ValidarEmail(email))
-                
+
                     throw new Exception();
             }
             catch (Exception)
@@ -21,6 +26,8 @@ namespace FilmesAPI.Models.ValueObject
 
                 throw new Exception("Email informado é inválido: " + email);
             }
+
+            return email;
         }
 
         //Metodo de validar Email com REGEX

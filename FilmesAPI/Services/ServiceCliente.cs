@@ -17,6 +17,8 @@ namespace FilmesAPI.Services
 
         public void AtualizaCliente(Cliente cliente)
         {
+            cliente.Senha = CrypSenha(cliente.Senha);
+
             rep.AtualizaCliente(cliente);
         }
 
@@ -29,6 +31,7 @@ namespace FilmesAPI.Services
         {
             rep.RemoveCliente(id);
         }
+
         public Cliente RetornaClienteId(int id)
         {
             return rep.RetornaClienteId(id);
@@ -47,7 +50,6 @@ namespace FilmesAPI.Services
         public bool CpfCadastrado(string Cpf)
         {
             return rep.CpfCadastrado(Cpf);
-
         }
 
         public bool EmailCadastrado(string email)
@@ -62,7 +64,17 @@ namespace FilmesAPI.Services
 
         public void ValidaCliente(Cliente cliente)
         {
-            if (!CpfCadastrado(Convert.ToString(cliente.Cpf)))
+            string CpfValido = cliente.Cpf.ToString();
+            CPF cpf = new CPF();
+            cliente.Cpf = CpfValido;
+
+            string rgValido = cliente.Rg.ToString();
+            //RG rg = new RG(rgValido);
+
+            string emailValido = cliente.Email.ToString();
+            Email email = new Email();
+
+            if (!CpfCadastrado(CpfValido))
             {
                 cliente.Senha = CrypSenha(cliente.Senha);
             }
@@ -95,6 +107,5 @@ namespace FilmesAPI.Services
                 return false;
             }
         }
-
     }
 }

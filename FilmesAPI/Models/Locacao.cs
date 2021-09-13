@@ -10,7 +10,7 @@ namespace FilmesAPI.Models
     public class Locacao
     {
         [Key]
-        public int LocacaoId { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "O campo título é obrigatório")]
         [StringLength(30, MinimumLength = 2, ErrorMessage = "O Título deve conter no máximo 30 caracteres e minimo de 2 caracteres.")]
@@ -18,7 +18,7 @@ namespace FilmesAPI.Models
         public string Titulo { get; set; }
 
         [Required(ErrorMessage ="O valor deve ser informado !")]
-        [RegularExpression(@"^\d+(\,\d{1,2})?$")]
+        //[RegularExpression(@"^\d+(\,\d{1,2})?$")]
         [Range(0, 9999.99, ErrorMessage ="O valor não pode ultrapassar 10 mil reais !")]
         public decimal Valor { get; set; }
 

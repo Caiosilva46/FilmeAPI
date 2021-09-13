@@ -36,7 +36,7 @@ namespace FilmesAPI.Controllers
             if (!_serviceCliente.LocalizaId(id) || id <= 0)
             {
                 return BadRequest("Cliente não encontrado !");
-            } 
+            }
             return _serviceCliente.RetornaClienteId(id);
         }
 
@@ -45,12 +45,6 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult AdicionaCliente(Cliente cliente)
         {
-            CPF cpf = new(cliente.Cpf.ToString());
-
-            Email email = new(cliente.Email.ToString());
-
-            RG rg = new(cliente.Rg.ToString());
-
             _serviceCliente.ValidaCliente(cliente);
 
             if (_serviceCliente.CpfCadastrado(cliente.Cpf.ToString()))
@@ -63,6 +57,7 @@ namespace FilmesAPI.Controllers
             }
 
             _serviceCliente.AdicionaCliente(cliente);
+
             return CreatedAtAction("adicionacliente", cliente);
         }
 
@@ -71,7 +66,7 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult DeletaCliente(int id)
         {
-            if (!_serviceCliente.LocalizaId(id) || id <=0)
+            if (!_serviceCliente.LocalizaId(id) || id <= 0)
             {
                 return BadRequest("Cliente não localizado !");
             }
@@ -86,7 +81,9 @@ namespace FilmesAPI.Controllers
         public ActionResult AtualizaCliente(Cliente cliente)
         {
             _serviceCliente.AtualizaCliente(cliente);
+
             return Ok("Cliente atualizado com sucesso !");
+
         }
 
         [HttpPost("logincliente")]
@@ -94,23 +91,23 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult LoginCliente([FromBody] Cliente cliente)
         {
-                if (string.IsNullOrEmpty(cliente.Email.ToString()) && string.IsNullOrEmpty(cliente.Senha))
-                {
-                    return BadRequest("Email e senha precisam ser informados!");
-                }
+            if (string.IsNullOrEmpty(cliente.Email.ToString()) && string.IsNullOrEmpty(cliente.Senha))
+            {
+                return BadRequest("Email e senha precisam ser informados!");
+            }
 
-                if (!_serviceCliente.EmailCadastrado(cliente.Email.ToString()))
-                {
-                    return BadRequest("Email inválido!");
-                }
+            if (!_serviceCliente.EmailCadastrado(cliente.Email.ToString()))
+            {
+                return BadRequest("Email inválido!");
+            }
 
-                var senhaHash = _serviceCliente.CrypSenha(cliente.Senha);
+            var senhaHash = _serviceCliente.CrypSenha(cliente.Senha);
 
-                if (!_serviceCliente.SenhaCadastrada(senhaHash))
-                {
-                    return BadRequest("Senha inválido!");
-                }
-                return Ok("Cliente logado com sucesso !");
+            if (!_serviceCliente.SenhaCadastrada(senhaHash))
+            {
+                return BadRequest("Senha inválido!");
+            }
+            return Ok("Cliente logado com sucesso !");
         }
     }
 }

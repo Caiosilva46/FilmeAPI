@@ -1,29 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace FilmesAPI.Models.ValueObject
 {
     public class CPF
     {
-        public CPF(string cpf)
+        public CPF()
         {
+
+        }
+
+        public string ValidaCpf(string cpf)
+        {
+            string cpfValido = string.Empty;
             try
             {
-                cpf = LimpaCPF(cpf);
+                cpfValido = LimpaCPF(cpf);
 
-                cpf = ValidarCPf(cpf);
+                cpfValido = ValidarTamanhoCPf(cpfValido);
 
                 //metodo que verificar CPF (cpf)    
-                if (!VerificarCPf(cpf))
+                if (!VerificarCPf(cpfValido))
                     throw new Exception();
             }
             catch (Exception)
             {
-                throw new Exception("O CPF informando não é válido" + cpf);
+                throw new Exception("O CPF informando não é válido" + cpfValido);
             }
+
+            return cpfValido;
         }
 
         //TODO criar metodo para limpar CPF
@@ -37,7 +42,7 @@ namespace FilmesAPI.Models.ValueObject
         }
 
         //Criar um metodo para validar o tamanho do CPF
-        public string ValidarCPf(string cpf)
+        public string ValidarTamanhoCPf(string cpf)
         {
             string novocpf = cpf.PadLeft(11, '0'); // PADLEFT adiciona zeros a esquerda da variavel declarada.
             return novocpf; // Criar metodo para validar o CPF se ele tem 11 caracteres, caso tenha menos, adicionar zeros a esquerda

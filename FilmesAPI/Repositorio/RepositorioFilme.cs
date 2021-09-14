@@ -41,16 +41,19 @@ namespace FilmesAPI.Repositorio
                         ListFilme.Add(filme);
                     }
                 }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
                 finally
                 {
                     if (dataRead != null)
                     {
                         dataRead.Close();
                     }
-                    else if (connection != null)
-                    {
-                        connection.Close();
-                    }
+
+                    connection.Close();
+
                 }
                 return ListFilme;
             }
@@ -81,25 +84,26 @@ namespace FilmesAPI.Repositorio
                         };
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
                 {
                     if (dataRead != null)
                     {
                         dataRead.Close();
                     }
-                }
-                finally
-                {
+
                     connection.Close();
                 }
-
                 return filme;
             }
         }
 
         public void AdicionaFilme(Filme filme)
         {
-            string queryString = @"INSERT INTO tb_filme (id, titulo, genero, datacadastro) VALUES (@id, @titulo, @genero, @datacadastro)";
+            string queryString = @"INSERT INTO tb_filme (titulo, genero, datacadastro) VALUES (@titulo, @genero, @datacadastro)";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -107,21 +111,21 @@ namespace FilmesAPI.Repositorio
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
-                    command.Parameters.AddWithValue("@id", filme.Id);
                     command.Parameters.AddWithValue("@titulo", filme.Titulo);
                     command.Parameters.AddWithValue("@genero", filme.Genero);
                     command.Parameters.AddWithValue("@datacadastro", DateTime.Now.ToShortDateString());
                     command.ExecuteNonQuery();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    if (filme.Id == filme.Id)
-                    {
-                        filme.Id++;
-                    }
+                    throw ex;
                 }
                 finally
                 {
+                    if (dataRead != null)
+                    {
+                        dataRead.Close();
+                    }
                     connection.Close();
                 }
             }
@@ -142,15 +146,17 @@ namespace FilmesAPI.Repositorio
                     command.Parameters.AddWithValue("@genero", filme.Genero);
                     command.ExecuteNonQuery();
                 }
-                catch (Exception)
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
                 {
                     if (dataRead != null)
                     {
                         dataRead.Close();
                     }
-                }
-                finally
-                {
+
                     connection.Close();
                 }
             }
@@ -169,15 +175,17 @@ namespace FilmesAPI.Repositorio
                     command.Parameters.AddWithValue("@id", id);
                     command.ExecuteNonQuery();
                 }
-                catch (Exception)
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
                 {
                     if (dataRead != null)
                     {
                         dataRead.Close();
                     }
-                }
-                finally
-                {
+
                     connection.Close();
                 }
             }

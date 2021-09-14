@@ -16,10 +16,6 @@ namespace FilmesAPI.Services
     {
         private readonly RepositorioCliente rep = new RepositorioCliente();
 
-        public string CpfFinal;
-        public string RgFinal;
-        public string EmailFinal;
-
         public Cliente RetornaClienteId(int id)
         {
             return rep.RetornaClienteId(id);
@@ -32,16 +28,12 @@ namespace FilmesAPI.Services
 
         public void AdicionaCliente(Cliente cliente)
         {
-            cliente.Cpf = CpfFinal;
-            cliente.Email = EmailFinal;
-            cliente.Rg = RgFinal; 
             rep.AdicionaCliente(cliente);
         }
 
         public void AtualizaCliente(Cliente cliente)
         {
-            cliente.Senha = CrypSenha(cliente.Senha);
-
+            cliente.Email = ValidaEmail(cliente.Email.ToString());
             rep.AtualizaCliente(cliente);
         }
 
@@ -57,13 +49,11 @@ namespace FilmesAPI.Services
 
         public bool CpfCadastrado(string Cpf)
         {
-            Cpf = CpfFinal;
             return rep.CpfCadastrado(Cpf);
         }
 
         public bool EmailCadastrado(string email)
         {
-            email = EmailFinal;
             return rep.EmailCadastrado(email);
         }
 
@@ -88,16 +78,11 @@ namespace FilmesAPI.Services
 
         public void ValidaCliente(Cliente cliente)
         {
-            string CpfValido = cliente.Cpf.ToString();
-            CpfFinal = ValidaCpf(CpfValido);
+            cliente.Cpf = ValidaCpf(cliente.Cpf.ToString());
+            cliente.Rg = ValidaRg(cliente.Rg.ToString());
+            cliente.Email = ValidaEmail(cliente.Email.ToString());
 
-            string rgValido = cliente.Rg.ToString();
-            RgFinal = ValidaRg(rgValido);
-
-            string emailValido = cliente.Email.ToString();
-            EmailFinal = ValidaEmail(emailValido);
-
-            if (!CpfCadastrado(CpfFinal))
+            if (!CpfCadastrado(cliente.Cpf.ToString()))
             {
                 cliente.Senha = CrypSenha(cliente.Senha);
             }

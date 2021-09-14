@@ -14,19 +14,11 @@ using FilmesAPI.Models.ValueObject;
 
 namespace FilmesAPI.Controllers
 {
-
     [ApiController]
     [Route("api/cliente")]
     public class ClienteController : ControllerBase
     {
         public readonly ServiceCliente _serviceCliente = new ServiceCliente();
-
-        [HttpGet("recuperacliente")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public IEnumerable<Cliente> RecuperaCliente()
-        {
-            return _serviceCliente.RetornaCliente();
-        }
 
         [HttpGet("recuperaclienteid/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -38,6 +30,13 @@ namespace FilmesAPI.Controllers
                 return BadRequest("Cliente não encontrado !");
             }
             return _serviceCliente.RetornaClienteId(id);
+        }
+
+        [HttpGet("recuperacliente")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IEnumerable<Cliente> RecuperaCliente()
+        {
+            return _serviceCliente.RetornaCliente();
         }
 
         [HttpPost("adicionacliente")]
@@ -61,6 +60,20 @@ namespace FilmesAPI.Controllers
             return CreatedAtAction("adicionacliente", cliente);
         }
 
+        [HttpPut("atualizacliente/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult AtualizaCliente(Cliente cliente)
+        {
+            if(!_serviceCliente.LocalizaId(cliente.Id))
+            {
+                return BadRequest("Cliente não localizado !");
+            }
+            _serviceCliente.AtualizaCliente(cliente);
+
+            return Ok("Cliente atualizado com sucesso !");
+        }
+
         [HttpDelete("deletacliente/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -76,20 +89,10 @@ namespace FilmesAPI.Controllers
             return Ok("Cliente excluido com sucesso !");
         }
 
-        [HttpPut("atualizacliente/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult AtualizaCliente(Cliente cliente)
-        {
-            _serviceCliente.AtualizaCliente(cliente);
-
-            return Ok("Cliente atualizado com sucesso !");
-
-        }
-
         [HttpPost("logincliente")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult LoginCliente([FromBody] Cliente cliente)
+        public ActionResult LoginCliente(Cliente cliente)
         {
             if (string.IsNullOrEmpty(cliente.Email.ToString()) && string.IsNullOrEmpty(cliente.Senha))
             {

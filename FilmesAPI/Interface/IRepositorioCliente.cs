@@ -29,7 +29,7 @@ namespace FilmesAPI.Interface
 
         //GET
         bool CpfCadastrado(string cpf);
-       
+
         //GET
         bool EmailCadastrado(string email);
 

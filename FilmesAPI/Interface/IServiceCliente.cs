@@ -23,7 +23,7 @@ namespace FilmesAPI.Interface
 
         //DELETE
         void RemoveCliente(int id);
-     
+
         //GETINFO
         bool LocalizaId(int id);
 

@@ -45,16 +45,19 @@ namespace FilmesAPI.Repositorio
                         ListaDeClientes.Add(cliente);
                     }
                 }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
                 finally
                 {
                     if (dataRead != null)
                     {
                         dataRead.Close();
                     }
-                    else if (connection != null)
-                    {
-                        connection.Close();
-                    }
+
+                    connection.Close();
+
                 }
                 return ListaDeClientes;
             }
@@ -87,15 +90,17 @@ namespace FilmesAPI.Repositorio
                         };
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
                 {
                     if (dataRead != null)
                     {
                         dataRead.Close();
                     }
-                }
-                finally
-                {
+
                     connection.Close();
                 }
                 return cliente;
@@ -104,7 +109,7 @@ namespace FilmesAPI.Repositorio
 
         public void AdicionaCliente(Cliente cliente)
         {
-            string queryString = @"INSERT INTO tb_cliente (id, nome, cpf, rg, email, senha) VALUES (@id ,@nome ,@cpf, @rg, @email, @senha)";
+            string queryString = @"INSERT INTO tb_cliente (nome, cpf, rg, email, senha) VALUES (@nome ,@cpf, @rg, @email, @senha)";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -112,7 +117,6 @@ namespace FilmesAPI.Repositorio
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
-                    command.Parameters.AddWithValue("@id", string.Join(",", cliente.Id));
                     command.Parameters.AddWithValue("@nome", string.Join(",", cliente.Nome));
                     command.Parameters.AddWithValue("@cpf", string.Join(",", cliente.Cpf));
                     command.Parameters.AddWithValue("@rg", string.Join(",", cliente.Rg));
@@ -121,15 +125,16 @@ namespace FilmesAPI.Repositorio
                     command.ExecuteNonQuery();
 
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    if (cliente.Id == cliente.Id)
-                    {
-                        cliente.Id++;
-                    }
+                    throw ex;
                 }
                 finally
                 {
+                    if (dataRead != null)
+                    {
+                        dataRead.Close();
+                    }
                     connection.Close();
                 }
             }
@@ -137,7 +142,7 @@ namespace FilmesAPI.Repositorio
 
         public void AtualizaCliente(Cliente cliente)
         {
-            string queryString = @"UPDATE tb_cliente SET nome = @nome, cpf = @cpf, rg = @rg, email = @email, senha = @senha WHERE id = @id";
+            string queryString = @"UPDATE tb_cliente SET nome = @nome, email = @email WHERE id = @id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -147,10 +152,7 @@ namespace FilmesAPI.Repositorio
                     connection.Open();
                     command.Parameters.AddWithValue("@id", string.Join(",", cliente.Id));
                     command.Parameters.AddWithValue("@nome", string.Join(",", cliente.Nome));
-                    command.Parameters.AddWithValue("@cpf", string.Join(",", cliente.Cpf));
-                    command.Parameters.AddWithValue("@rg", string.Join(",", cliente.Rg));
                     command.Parameters.AddWithValue("@email", string.Join(",", cliente.Email));
-                    command.Parameters.AddWithValue("@senha", string.Join(",", cliente.Senha));
                     command.ExecuteNonQuery();
                 }
                 catch (Exception)
@@ -159,6 +161,11 @@ namespace FilmesAPI.Repositorio
                 }
                 finally
                 {
+                    if (dataRead != null)
+                    {
+                        dataRead.Close();
+                    }
+
                     connection.Close();
                 }
             }
@@ -179,13 +186,14 @@ namespace FilmesAPI.Repositorio
                 }
                 catch (Exception)
                 {
-                    if (connection == null)
-                    {
-                        connection.Close();
-                    }
+                    throw;
                 }
                 finally
                 {
+                    if (dataRead != null)
+                    {
+                        dataRead.Close();
+                    }
                     connection.Close();
                 }
             }
@@ -193,7 +201,7 @@ namespace FilmesAPI.Repositorio
 
         public bool LocalizaId(int id)
         {
-            string queryString = @"SELECT id FROM tb_cliente WHERE id = @id";
+            string queryString = @"SELECT c.id FROM tb_cliente as c WHERE id = @id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -216,7 +224,7 @@ namespace FilmesAPI.Repositorio
 
         public bool CpfCadastrado(string cpf)
         {
-            string queryString = @"SELECT cpf FROM tb_cliente WHERE cpf = @cpf";
+            string queryString = @"SELECT c.cpf FROM tb_cliente as c WHERE cpf = @cpf";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -239,7 +247,7 @@ namespace FilmesAPI.Repositorio
 
         public bool EmailCadastrado(string email)
         {
-            string queryString = @"SELECT email FROM tb_cliente WHERE email = @email";
+            string queryString = @"SELECT c.email FROM tb_cliente as c WHERE email = @email";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -262,7 +270,7 @@ namespace FilmesAPI.Repositorio
 
         public bool SenhaCadastrada(string senha)
         {
-            string queryString = @"SELECT senha FROM tb_cliente WHERE senha = @senha";
+            string queryString = @"SELECT c.senha FROM tb_cliente as c WHERE senha = @senha";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {

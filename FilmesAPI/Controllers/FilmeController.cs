@@ -31,7 +31,7 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Filme> RecuperaFilmeId(int id)
         {
-            if(!_serviceFilme.LocalizaId(id) || id <= 0) 
+            if (!_serviceFilme.LocalizaId(id) || id <= 0)
             {
                 return BadRequest("Filme não localizado !");
             }
@@ -50,28 +50,26 @@ namespace FilmesAPI.Controllers
             _serviceFilme.AdicionaFilme(filme);
             return CreatedAtAction("adicionafilme", filme);
         }
-        
+
+        [HttpPut("atualizafilme/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult AtualizaFilme(Filme filme)
+        {
+            _serviceFilme.AtualizaFilme(filme);
+            return Ok("Filme atualizado com sucesso !");
+        }
+
         [HttpDelete("deletafilme/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-
-        public ActionResult DeletaFilme (int id)
+        public ActionResult DeletaFilme(int id)
         {
-            if(!_serviceFilme.LocalizaId(id) || id <= 0)
+            if (!_serviceFilme.LocalizaId(id) || id <= 0)
             {
                 return BadRequest("Filme não localizado !");
             }
             _serviceFilme.RemoveFilme(id);
 
             return Ok("Item deletado com sucesso!");
-        }
-
-        [HttpPut("atualizafilme/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-
-        public ActionResult AtualizaFilme (Filme filme)
-        {
-            _serviceFilme.AtualizaFilme(filme);
-            return Ok("Filme atualizado com sucesso !");
         }
     }
 }

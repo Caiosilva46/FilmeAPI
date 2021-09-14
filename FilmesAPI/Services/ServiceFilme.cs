@@ -34,7 +34,7 @@ namespace FilmesAPI.Services
 
         public void RemoveFilme(int id)
         {
-           rep.RemoveFilme(id);
+            rep.RemoveFilme(id);
         }
 
         public bool LocalizaId(int id)

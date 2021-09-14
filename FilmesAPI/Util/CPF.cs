@@ -3,8 +3,10 @@ using System.Text.RegularExpressions;
 
 namespace FilmesAPI.Models.ValueObject
 {
+    
     public class CPF
     {
+
         public string cpfValido = string.Empty;
         public CPF()
         {

@@ -185,7 +185,6 @@ namespace FilmesAPI.Repositorio
                     {
                         dataRead.Close();
                     }
-
                     connection.Close();
                 }
             }
@@ -210,7 +209,6 @@ namespace FilmesAPI.Repositorio
                 }
 
                 connection.Close();
-
                 return resultado;
             }
         }

@@ -14,6 +14,9 @@ namespace FilmesAPI.Interface
 
         //GETID
         Locacao RetornaLocacaoId(int id);
+        
+        //GETINFO
+        bool LocalizaId(int id);
 
         //POST
         void AdicionaLocacao(Locacao locacao);

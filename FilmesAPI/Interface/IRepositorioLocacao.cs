@@ -22,5 +22,12 @@ namespace FilmesAPI.Interface
 
         //DELETE
         void RemoveLocacao(int id);
+
+
+        //GETINFO
+        bool LocalizaId(int id);
+
+        //GETINFO
+        bool
     }
 }

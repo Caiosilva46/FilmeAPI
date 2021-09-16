@@ -57,7 +57,6 @@ namespace FilmesAPI.Repositorio
                     }
 
                     connection.Close();
-
                 }
                 return ListaDeClientes;
             }
@@ -165,7 +164,6 @@ namespace FilmesAPI.Repositorio
                     {
                         dataRead.Close();
                     }
-
                     connection.Close();
                 }
             }

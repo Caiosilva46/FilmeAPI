@@ -19,7 +19,6 @@ namespace FilmesAPI.Models
         [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "O Gênero não pode conter números ou caracteres especiais")]
         public string Genero { get; set; }
 
-        [Required(ErrorMessage = "A data é obrigatória para a locação do produto")]
         [DataType(DataType.Date)]
         public DateTime DataCadastro { get; set; }
 

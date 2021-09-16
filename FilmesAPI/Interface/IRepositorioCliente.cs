@@ -27,7 +27,7 @@ namespace FilmesAPI.Interface
         //GET
         bool LocalizaId(int id);
 
-        //GET
+        //GETINFO
         bool CpfCadastrado(string cpf);
 
         //GET

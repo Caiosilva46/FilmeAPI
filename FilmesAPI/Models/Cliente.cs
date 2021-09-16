@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Text;
 using FilmesAPI.Models.ValueObject;
+using System.Collections.ObjectModel;
 
 namespace FilmesAPI.Models
 {
@@ -29,5 +30,6 @@ namespace FilmesAPI.Models
         public string Senha { get; set; }
 
         public ICollection<Locacao> Locacao { get; set; }
+
     }
 }

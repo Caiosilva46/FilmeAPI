@@ -36,5 +36,10 @@ namespace FilmesAPI.Services
         {
             rep.RemoveLocacao(id);
         }
+
+        public bool LocalizaId(int id)
+        {
+            return rep.LocalizaId(id);
+        }
     }
 }

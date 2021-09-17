@@ -12,39 +12,39 @@ namespace FilmesAPI.Services
     {
         private readonly RepositorioFilme rep = new RepositorioFilme();
 
-        public List<Filme> RetornaFilme()
+        public List<Filme> GetFilme()
         {
-            return rep.RetornaFilme();
+            return rep.GetFilme();
         }
 
-        public Filme RetornaFilmeId(int id)
+        public Filme GetFilmeById(int id)
         {
-            return rep.RetornaFilmeId(id);
+            return rep.GetFilmeById(id);
         }
 
-        public void AdicionaFilme(Filme filme)
+        public void PostFilme(Filme filme)
         {
-            rep.AdicionaFilme(filme);
+            rep.PostFilme(filme);
         }
 
-        public void AtualizaFilme(Filme filme)
+        public void PutFilme(Filme filme)
         {
-            rep.AtualizaFilme(filme);
+            rep.PutFilme(filme);
         }
 
-        public void RemoveFilme(int id)
+        public void DeleteFilme(int id)
         {
-            rep.RemoveFilme(id);
+            rep.DeleteFilme(id);
         }
 
-        public bool LocalizaId(int id)
+        public bool GetId(int id)
         {
-            return rep.LocalizaId(id);
+            return rep.GetId(id);
         }
 
-        public bool TituloCadastrado(Filme filme)
+        public bool GetTitulo(Filme filme)
         {
-            return rep.TituloCadastrado(filme);
+            return rep.GetTitulo(filme);
         }
     }
 }

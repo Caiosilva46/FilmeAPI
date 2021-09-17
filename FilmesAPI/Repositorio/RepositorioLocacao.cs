@@ -10,12 +10,10 @@ namespace FilmesAPI.Repositorio
 {
     public class RepositorioLocacao : IRepositorioLocacao
     {
-
         string connectionString = @"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-
         SqlDataReader dataRead = null;
 
-        public List<Locacao> RetornaLocacao()
+        public List<Locacao> GetLocacao()
         {
             string queryString = @"SELECT l.id, l.titulo, l.valor, l.dataretirada, l.datadevolucao, l.clienteid, l.filmeid FROM tb_locacao AS l JOIN tb_cliente c ON l.clienteid = c.id JOIN tb_filme f ON l.filmeid = f.id";
             Locacao locacao;
@@ -34,7 +32,6 @@ namespace FilmesAPI.Repositorio
                         locacao = new Locacao
                         {
                             Id = Convert.ToInt32(reader["id"].ToString()),
-                            Titulo = reader["titulo"].ToString(),
                             Valor = Convert.ToDecimal(reader["valor"].ToString()),
                             DataRetirada = Convert.ToDateTime(reader["dataretirada"].ToString()),
                             DataDevolucao = Convert.ToDateTime(reader["datadevolucao"].ToString()),
@@ -62,9 +59,9 @@ namespace FilmesAPI.Repositorio
             return ListaLocacao;
         }
 
-        public Locacao RetornaLocacaoId(int id)
+        public Locacao GetLocacaoById(int id)
         {
-            string queryString = @"SELECT l.id, l.titulo, l.valor, l.dataretirada, l.datadevolucao, l.filmeId, l.clienteId FROM tb_locacao as l WHERE id = @id";
+            string queryString = @"SELECT l.id, l.titulo, l.valor, l.dataretirada, l.datadevolucao, l.clienteid, l.filmeid FROM tb_locacao AS l JOIN tb_cliente c ON l.clienteid = c.id JOIN tb_filme f ON l.filmeid = f.id WHERE l.id = @id";
             Locacao locacao = null;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -81,7 +78,6 @@ namespace FilmesAPI.Repositorio
                         locacao = new Locacao
                         {
                             Id = int.Parse(reader["id"].ToString()),
-                            Titulo = reader["titulo"].ToString(),
                             Valor = Decimal.Parse(reader["valor"].ToString()),
                             DataRetirada = Convert.ToDateTime(reader["dataretirada"].ToString()),
                             DataDevolucao = Convert.ToDateTime(reader["datadevolucao"].ToString()),
@@ -99,7 +95,7 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public void AdicionaLocacao(Locacao locacao)
+        public void PostLocacao(Locacao locacao)
         {
             string queryString = @"INSERT INTO tb_locacao (titulo, valor, dataretirada, datadevolucao, clienteid, filmeid) VALUES (@titulo, @valor, @dataretirada, @datadevolucao, @clienteid, @filmeid)";
 
@@ -109,7 +105,6 @@ namespace FilmesAPI.Repositorio
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
-                    command.Parameters.AddWithValue("@titulo", locacao.Titulo);
                     command.Parameters.AddWithValue("@valor", locacao.Valor);
                     command.Parameters.AddWithValue("@dataretirada", DateTime.Now.ToShortDateString());
                     command.Parameters.AddWithValue("@datadevolucao", locacao.DataDevolucao.ToShortDateString());
@@ -128,9 +123,9 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public void AtualizaLocacao(Locacao locacao)
+        public void PutLocacao(Locacao locacao)
         {
-            string queryString = @"UPDATE tb_locacao SET titulo = @titulo, valor = @valor, dataretirada = @dataretirada, datadevolucao = @dataDevolucao WHERE id = @id";
+            string queryString = @"UPDATE tb_locacao SET titulo = @titulo, valor = @valor WHERE id = @id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -139,10 +134,7 @@ namespace FilmesAPI.Repositorio
                     SqlCommand command = new SqlCommand(queryString, connection);
                     connection.Open();
                     command.Parameters.AddWithValue("@id", locacao.Id);
-                    command.Parameters.AddWithValue("@titulo", locacao.Titulo);
                     command.Parameters.AddWithValue("@valor", locacao.Valor);
-                    command.Parameters.AddWithValue("@dataRetirada", DateTime.Now.ToShortDateString());
-                    command.Parameters.AddWithValue("@dataDevolucao", locacao.DataDevolucao);
                     command.ExecuteNonQuery();
                 }
 
@@ -158,7 +150,7 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public void RemoveLocacao(int id)
+        public void DeleteLocacao(int id)
         {
             string queryString = @"DELETE FROM tb_locacao WHERE id = @id";
 
@@ -182,7 +174,7 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public bool LocalizaId(int id)
+        public bool GetId(int id)
         {
             string queryString = @"SELECT id FROM tb_locacao WHERE id = @id";
 

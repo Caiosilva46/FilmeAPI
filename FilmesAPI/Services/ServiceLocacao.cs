@@ -12,34 +12,34 @@ namespace FilmesAPI.Services
     {
         private readonly RepositorioLocacao rep = new RepositorioLocacao();
 
-        public List<Locacao> RetornaLocacao()
+        public List<Locacao> GetLocacao()
         {
-            return rep.RetornaLocacao();
+            return rep.GetLocacao();
         }
 
-        public Locacao RetornaLocacaoId(int id)
+        public Locacao GetLocacaoById(int id)
         {
-            return rep.RetornaLocacaoId(id);
+            return rep.GetLocacaoById(id);
         }
 
-        public void AdicionaLocacao(Locacao locacao)
+        public void PostLocacao(Locacao locacao)
         {
-            rep.AdicionaLocacao(locacao);
+            rep.PostLocacao(locacao);
         }
 
-        public void AtualizaLocacao(Locacao locacao)
+        public void PutLocacao(Locacao locacao)
         {
-            rep.AtualizaLocacao(locacao);
+            rep.PutLocacao(locacao);
         }
 
-        public void RemoveLocacao(int id)
+        public void DeleteLocacao(int id)
         {
-            rep.RemoveLocacao(id);
+            rep.DeleteLocacao(id);
         }
 
-        public bool LocalizaId(int id)
+        public bool GetId(int id)
         {
-            return rep.LocalizaId(id);
+            return rep.GetId(id);
         }
     }
 }

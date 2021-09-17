@@ -17,9 +17,9 @@ namespace FilmesAPI.Repositorio
 
         string connectionString = @"Data Source=CAIOSILVA-PC\SQLEXPRESS;Initial Catalog=Everis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
-        public List<Cliente> RetornaCliente()
+        public List<Cliente> GetCliente()
         {
-            string queryString = @"SELECT c.id, c.nome, c.cpf, c.rg, c.email, c.senha FROM tb_cliente as c";
+            string queryString = @"SELECT c.id, c.nome, c.cpf, c.rg, c.email, c.senha, c.ativo, c.datacadastro FROM tb_cliente as c";
             Cliente cliente;
             List<Cliente> ListaDeClientes = new List<Cliente>();
 
@@ -40,7 +40,9 @@ namespace FilmesAPI.Repositorio
                             Cpf = reader["cpf"].ToString(),
                             Rg = reader["rg"].ToString(),
                             Email = reader["email"].ToString(),
-                            Senha = reader["senha"].ToString()
+                            Senha = reader["senha"].ToString(),
+                            Ativo = Convert.ToBoolean(reader["ativo"]),
+                            DataCadastrado = Convert.ToDateTime(reader["datacadastro"].ToString())
                         };
                         ListaDeClientes.Add(cliente);
                     }
@@ -62,10 +64,10 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public Cliente RetornaClienteId(int id)
+        public Cliente GetClienteById(int id)
         {
             Cliente cliente = null;
-            string queryString = @"SELECT c.id, c.nome, c.cpf, c.rg, c.email, c.senha FROM tb_cliente as c WHERE c.id = @id ";
+            string queryString = @"SELECT c.id, c.nome, c.cpf, c.rg, c.email, c.senha, c.ativo, c.datacadastro FROM tb_cliente as c WHERE c.id = @id ";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -86,6 +88,8 @@ namespace FilmesAPI.Repositorio
                             Rg = reader["rg"].ToString(),
                             Email = reader["email"].ToString(),
                             Senha = reader["senha"].ToString(),
+                            Ativo = Convert.ToBoolean(reader["ativo"]),
+                            DataCadastrado = Convert.ToDateTime(reader["datacadastro"].ToString())
                         };
                     }
                 }
@@ -106,9 +110,9 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public void AdicionaCliente(Cliente cliente)
+        public void PostCliente(Cliente cliente)
         {
-            string queryString = @"INSERT INTO tb_cliente (nome, cpf, rg, email, senha) VALUES (@nome ,@cpf, @rg, @email, @senha)";
+            string queryString = @"INSERT INTO tb_cliente (nome, cpf, rg, email, senha, ativo, datacadastro) VALUES (@nome ,@cpf, @rg, @email, @senha, @ativo, @datacadastro)";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -121,6 +125,8 @@ namespace FilmesAPI.Repositorio
                     command.Parameters.AddWithValue("@rg", string.Join(",", cliente.Rg));
                     command.Parameters.AddWithValue("@email", string.Join(",", cliente.Email));
                     command.Parameters.AddWithValue("@senha", string.Join(",", cliente.Senha));
+                    command.Parameters.AddWithValue("@ativo", string.Join(",", cliente.Ativo));
+                    command.Parameters.AddWithValue("@datacadastro", string.Join(",", DateTime.Now.ToShortDateString()));
                     command.ExecuteNonQuery();
 
                 }
@@ -139,7 +145,7 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public void AtualizaCliente(Cliente cliente)
+        public void PutCliente(Cliente cliente)
         {
             string queryString = @"UPDATE tb_cliente SET nome = @nome, email = @email WHERE id = @id";
 
@@ -169,9 +175,9 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public void RemoveCliente(int id)
+        public void DeleteCliente(int id)
         {
-            string queryString = @"DELETE FROM tb_cliente WHERE id = @id";
+            string queryString = @"UPDATE tb_cliente SET ativo = 0 WHERE id = @id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -197,7 +203,7 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public bool LocalizaId(int id)
+        public bool GetId(int id)
         {
             string queryString = @"SELECT c.id FROM tb_cliente as c WHERE id = @id";
 
@@ -220,7 +226,7 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public bool CpfCadastrado(string cpf)
+        public bool GetCpf(string cpf)
         {
             string queryString = @"SELECT c.cpf FROM tb_cliente as c WHERE cpf = @cpf";
 
@@ -243,7 +249,7 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public bool EmailCadastrado(string email)
+        public bool GetEmail(string email)
         {
             string queryString = @"SELECT c.email FROM tb_cliente as c WHERE email = @email";
 
@@ -266,9 +272,9 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public bool SenhaCadastrada(string senha)
+        public bool GetSenha(string senha, string email)
         {
-            string queryString = @"SELECT c.senha FROM tb_cliente as c WHERE senha = @senha";
+            string queryString = @"SELECT c.senha, c.email FROM tb_cliente as c WHERE c.senha = @senha and c.mail =@email ";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -276,6 +282,7 @@ namespace FilmesAPI.Repositorio
                 SqlCommand command = new SqlCommand(queryString, connection);
                 connection.Open();
                 command.Parameters.AddWithValue("@senha", senha);
+                command.Parameters.AddWithValue("@email", email);
                 SqlDataReader reader = command.ExecuteReader();
 
                 if (reader.HasRows)

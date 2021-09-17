@@ -29,6 +29,10 @@ namespace FilmesAPI.Models
         [StringLength(15, MinimumLength = 4, ErrorMessage = "A senha teve ter no mínimo 4 digitos e maximo de 15 digitos")]
         public string Senha { get; set; }
 
+        public bool Ativo { get; set; }
+
+        public DateTime DataCadastrado { get; set; }
+
         public ICollection<Locacao> Locacao { get; set; }
 
     }

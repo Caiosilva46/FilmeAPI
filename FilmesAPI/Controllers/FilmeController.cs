@@ -22,22 +22,22 @@ namespace FilmesAPI.Controllers
 
         [HttpGet("recuperafilme")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IEnumerable<Filme> RecuperaFilme()
+        public IEnumerable<Filme> GetFilme()
         {
-            return _serviceFilme.RetornaFilme();
+            return _serviceFilme.GetFilme();
         }
 
         [HttpGet("recuperafilmeid/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Filme> RecuperaFilmeId(int id)
+        public ActionResult<Filme> GetFilmeById(int id)
         {
-            if (!_serviceFilme.LocalizaId(id) || id <= 0)
+            if (!_serviceFilme.GetId(id))
             {
                 return BadRequest("Filme não localizado !");
             }
 
-            return _serviceFilme.RetornaFilmeId(id);
+            return _serviceFilme.GetFilmeById(id);
         }
 
         [HttpPost("adicionafilme")]
@@ -45,11 +45,11 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult AdicionaFilme(Filme filme)
         {
-            if (_serviceFilme.TituloCadastrado(filme))
+            if (_serviceFilme.GetTitulo(filme))
             {
                 return BadRequest("Já existe um filme cadastrado com esse Título e Gênero !");
             }
-            _serviceFilme.AdicionaFilme(filme);
+            _serviceFilme.PostFilme(filme);
             return CreatedAtAction("adicionafilme", filme);
         }
 
@@ -58,11 +58,11 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult AtualizaFilme(Filme filme)
         {
-            if (!_serviceFilme.LocalizaId(filme.Id))
+            if (!_serviceFilme.GetId(filme.Id))
             {
                 return BadRequest("");
             }
-            _serviceFilme.AtualizaFilme(filme);
+            _serviceFilme.PutFilme(filme);
             return Ok("Filme atualizado com sucesso !");
         }
 
@@ -71,11 +71,11 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult DeletaFilme(int id)
         {
-            if (!_serviceFilme.LocalizaId(id) || id <= 0)
+            if (!_serviceFilme.GetId(id))
             {
                 return BadRequest("Filme não localizado !");
             }
-            _serviceFilme.RemoveFilme(id);
+            _serviceFilme.DeleteFilme(id);
 
             return Ok("Item deletado com sucesso!");
         }

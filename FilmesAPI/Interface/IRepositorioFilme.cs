@@ -8,25 +8,18 @@ namespace FilmesAPI.Interface
 {
     interface IRepositorioFilme
     {
-        //GET
-        List<Filme> RetornaFilme();
+        List<Filme> GetFilme();
 
-        //GETID
-        Filme RetornaFilmeId(int id);
+        Filme GetFilmeById(int id);
 
-        //POST
-        void AdicionaFilme(Filme filme);
+        void PostFilme(Filme filme);
 
-        //PUT
-        void AtualizaFilme(Filme filme);
+        void PutFilme(Filme filme);
 
-        //DELETE
-        void RemoveFilme(int id);
+        void DeleteFilme(int id);
 
-        //GET
-        bool LocalizaId(int id);
+        bool GetId(int id);
 
-        //GET
-        bool TituloCadastrado(Filme filme);
+        bool GetTitulo(Filme filme);
     }
 }

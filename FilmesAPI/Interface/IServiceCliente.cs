@@ -10,30 +10,30 @@ namespace FilmesAPI.Interface
     public interface IServiceCliente
     {
         //GET
-        List<Cliente> RetornaCliente();
+        List<Cliente> GetCliente();
 
         //GETID
-        Cliente RetornaClienteId(int id);
+        Cliente GetClienteById(int id);
 
         //POST
-        void AdicionaCliente(Cliente cliente);
+        void PostCliente(Cliente cliente);
 
         //PUT
-        void AtualizaCliente(Cliente cliente);
+        void PutCliente(Cliente cliente);
 
         //DELETE
-        void RemoveCliente(int id);
+        void DeleteCliente(int id);
 
         //GETINFO
-        bool LocalizaId(int id);
+        bool GetId(int id);
 
         //GET 
-        bool CpfCadastrado(string cpf);
+        bool GetCpf(string cpf);
 
         //GET
-        bool EmailCadastrado(string email);
+        bool GetEmail(string email);
 
         //GET
-        bool SenhaCadastrada(string senha);
+        bool GetSenha(string senha, string email);
     }
 }

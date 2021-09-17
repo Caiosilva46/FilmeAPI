@@ -19,6 +19,9 @@ namespace FilmesAPI.Models
         [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "O Gênero não pode conter números ou caracteres especiais")]
         public string Genero { get; set; }
 
+        [Range(0, 999, ErrorMessage ="O item não pode ter mais de 999 quantidades !")]
+        public int QtdEstoque { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime DataCadastro { get; set; }
 

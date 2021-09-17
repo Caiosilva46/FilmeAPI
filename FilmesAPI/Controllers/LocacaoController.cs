@@ -22,58 +22,55 @@ namespace FilmesAPI.Controllers
         [HttpGet("recuperalocacaoid/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Locacao> RetornaLocacaoId(int id)
+        public ActionResult<Locacao> GetLocacaoById(int id)
         {
-            if (!_serviceLocacao.LocalizaId(id))
+            if (!_serviceLocacao.GetId(id))
             {
                 return BadRequest("Locação não localizada!");
             }
-            return _serviceLocacao.RetornaLocacaoId(id);
+            return _serviceLocacao.GetLocacaoById(id);
         }
 
         [HttpGet("recuperalocacao")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IEnumerable<Locacao> RecuperaLocacao()
+        public IEnumerable<Locacao> GetLocacao()
         {
-            return _serviceLocacao.RetornaLocacao();
+            return _serviceLocacao.GetLocacao();
         }
 
         [HttpPost("adicionalocacao")]
         [ProducesResponseType(typeof(Locacao), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult AdicionaLocacao(Locacao locacao)
+        public ActionResult PostLocacao(Locacao locacao)
         {
-            _serviceLocacao.AdicionaLocacao(locacao);
+            _serviceLocacao.PostLocacao(locacao);
             return CreatedAtAction("adicionalocacao", locacao);
-
-            return Ok("Locação efetuada com sucesso !");
-        }
-
-        [HttpDelete("deletalocacao/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult DeletaLocacao(int id)
-        {
-            if (!_serviceLocacao.LocalizaId(id))
-            {
-                return BadRequest("Locação não localizada !");
-            }
-            _serviceLocacao.RemoveLocacao(id);
-            return Ok("Locação excluida com sucesso !");
         }
 
         [HttpPut("atualizalocacao/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult AtualizaLocacao(Locacao locacao)
+        public ActionResult PutLocacao(Locacao locacao)
         {
-            if (!_serviceLocacao.LocalizaId(locacao.Id))
+            if (!_serviceLocacao.GetId(locacao.Id))
             {
                 return BadRequest("Locação não localizada para atualização!");
             }
-            _serviceLocacao.AtualizaLocacao(locacao);
+            _serviceLocacao.PutLocacao(locacao);
             return Ok("Locação atualizada com sucesso !");
         }
 
+        [HttpDelete("deletalocacao/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult DeleteLocacao(int id)
+        {
+            if (!_serviceLocacao.GetId(id))
+            {
+                return BadRequest("Locação não localizada !");
+            }
+            _serviceLocacao.DeleteLocacao(id);
+            return Ok("Locação excluida com sucesso !");
+        }
     }
 }

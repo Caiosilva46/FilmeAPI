@@ -16,50 +16,50 @@ namespace FilmesAPI.Services
     {
         private readonly RepositorioCliente rep = new RepositorioCliente();
 
-        public Cliente RetornaClienteId(int id)
+        public Cliente GetClienteById(int id)
         {
-            return rep.RetornaClienteId(id);
+            return rep.GetClienteById(id);
         }
 
-        public List<Cliente> RetornaCliente()
+        public List<Cliente> GetCliente()
         {
-            return rep.RetornaCliente();
+            return rep.GetCliente();
         }
 
-        public void AdicionaCliente(Cliente cliente)
+        public void PostCliente(Cliente cliente)
         {
-            rep.AdicionaCliente(cliente);
+            rep.PostCliente(cliente);
         }
 
-        public void AtualizaCliente(Cliente cliente)
+        public void PutCliente(Cliente cliente)
         {
             cliente.Email = ValidaEmail(cliente.Email.ToString());
-            rep.AtualizaCliente(cliente);
+            rep.PutCliente(cliente);
         }
 
-        public void RemoveCliente(int id)
+        public void DeleteCliente(int id)
         {
-            rep.RemoveCliente(id);
+            rep.DeleteCliente(id);
         }
 
-        public bool LocalizaId(int id)
+        public bool GetId(int id)
         {
-            return rep.LocalizaId(id);
+            return rep.GetId(id);
         }
 
-        public bool CpfCadastrado(string Cpf)
+        public bool GetCpf(string Cpf)
         {
-            return rep.CpfCadastrado(Cpf);
+            return rep.GetCpf(Cpf);
         }
 
-        public bool EmailCadastrado(string email)
+        public bool GetEmail(string email)
         {
-            return rep.EmailCadastrado(email);
+            return rep.GetEmail(email);
         }
 
-        public bool SenhaCadastrada(string senha)
+        public bool GetSenha(string senha, string email)
         {
-            return rep.SenhaCadastrada(senha);
+            return rep.GetSenha(senha, email);
         }
 
         public string CrypSenha(string senha)
@@ -82,7 +82,7 @@ namespace FilmesAPI.Services
             cliente.Rg = ValidaRg(cliente.Rg.ToString());
             cliente.Email = ValidaEmail(cliente.Email.ToString());
 
-            if (!CpfCadastrado(cliente.Cpf.ToString()))
+            if (!GetCpf(cliente.Cpf.ToString()))
             {
                 cliente.Senha = CrypSenha(cliente.Senha);
             }

@@ -12,12 +12,7 @@ namespace FilmesAPI.Models
         [Key]
         public int Id { get; set; }
 
-        [StringLength(30, MinimumLength = 2, ErrorMessage = "O Título deve conter no máximo 30 caracteres e minimo de 2 caracteres.")]
-        [RegularExpression(@"^[0-9a-zA-Z''-'\s]{1,30}$", ErrorMessage = "O título não pode conter caractéres especiais")]
-        public string Titulo { get; set; }
-
-        [Required(ErrorMessage = "O valor deve ser informado !")]
-        [Range(0, 9999.99, ErrorMessage = "O valor não pode ultrapassar 10 mil reais !")]
+        [Range(1, 9999.99, ErrorMessage = "O valor não pode ser negativo ou ultrapassar 10 mil reais !")]
         public decimal Valor { get; set; }
 
         [DataType(DataType.Date)]

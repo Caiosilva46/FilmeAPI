@@ -23,39 +23,39 @@ namespace FilmesAPI.Controllers
         [HttpGet("recuperaclienteid/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Cliente> RecuperaClienteId(int id)
+        public ActionResult<Cliente> GetClienteById(int id)
         {
-            if (!_serviceCliente.LocalizaId(id) || id <= 0)
+            if (!_serviceCliente.GetId(id))
             {
                 return BadRequest("Cliente não encontrado !");
             }
-            return _serviceCliente.RetornaClienteId(id);
+            return _serviceCliente.GetClienteById(id);
         }
 
         [HttpGet("recuperacliente")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IEnumerable<Cliente> RecuperaCliente()
+        public IEnumerable<Cliente> GetCliente()
         {
-            return _serviceCliente.RetornaCliente();
+            return _serviceCliente.GetCliente();
         }
 
         [HttpPost("adicionacliente")]
         [ProducesResponseType(typeof(Cliente), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult AdicionaCliente(Cliente cliente)
+        public ActionResult PostCliente(Cliente cliente)
         {
             _serviceCliente.ValidaCliente(cliente);
 
-            if (_serviceCliente.CpfCadastrado(cliente.Cpf.ToString()))
+            if (_serviceCliente.GetCpf(cliente.Cpf.ToString()))
             {
                 return BadRequest("CPF Já cadastrao para outro cliente !");
             }
-            else if (_serviceCliente.EmailCadastrado(cliente.Email.ToString()))
+            else if (_serviceCliente.GetEmail(cliente.Email.ToString()))
             {
-                return BadRequest("Email Já cadastrao para outro cliente !");
+                return BadRequest("Email Já cadastrado para outro cliente!");
             }
 
-            _serviceCliente.AdicionaCliente(cliente);
+            _serviceCliente.PostCliente(cliente);
 
             return CreatedAtAction("adicionacliente", cliente);
         }
@@ -63,13 +63,13 @@ namespace FilmesAPI.Controllers
         [HttpPut("atualizacliente/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult AtualizaCliente(Cliente cliente)
+        public ActionResult PutCliente(Cliente cliente)
         {
-            if(!_serviceCliente.LocalizaId(cliente.Id))
+            if(!_serviceCliente.GetId(cliente.Id))
             {
                 return BadRequest("Cliente não localizado !");
             }
-            _serviceCliente.AtualizaCliente(cliente);
+            _serviceCliente.PutCliente(cliente);
 
             return Ok("Cliente atualizado com sucesso !");
         }
@@ -77,14 +77,14 @@ namespace FilmesAPI.Controllers
         [HttpDelete("deletacliente/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult DeletaCliente(int id)
+        public ActionResult DeleteCliente(int id)
         {
-            if (!_serviceCliente.LocalizaId(id) || id <= 0)
+            if (!_serviceCliente.GetId(id))
             {
                 return BadRequest("Cliente não localizado !");
             }
 
-            _serviceCliente.RemoveCliente(id);
+            _serviceCliente.DeleteCliente(id);
 
             return Ok("Cliente excluido com sucesso !");
         }
@@ -92,21 +92,21 @@ namespace FilmesAPI.Controllers
         [HttpPost("logincliente")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult LoginCliente(Cliente cliente)
+        public ActionResult PostLoginCliente(Cliente cliente)
         {
             if (string.IsNullOrEmpty(cliente.Email.ToString()) && string.IsNullOrEmpty(cliente.Senha))
             {
                 return BadRequest("Email e senha precisam ser informados!");
             }
 
-            if (!_serviceCliente.EmailCadastrado(cliente.Email.ToString()))
+            if (!_serviceCliente.GetEmail(cliente.Email.ToString()))
             {
                 return BadRequest("Email inválido!");
             }
 
             var senhaHash = _serviceCliente.CrypSenha(cliente.Senha);
 
-            if (!_serviceCliente.SenhaCadastrada(senhaHash))
+            if (!_serviceCliente.GetSenha(senhaHash, cliente.Email.ToString()))
             {
                 return BadRequest("Senha inválido!");
             }

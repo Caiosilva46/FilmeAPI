@@ -8,26 +8,16 @@ namespace FilmesAPI.Interface
 {
     interface IRepositorioLocacao
     {
-        //GET
-        List<Locacao> RetornaLocacao();
+        List<Locacao> GetLocacao();
 
-        //GETID
-        Locacao RetornaLocacaoId(int id);
+        Locacao GetLocacaoById(int id);
 
-        //POST
-        void AdicionaLocacao(Locacao locacao);
+        void PostLocacao(Locacao locacao);
 
-        //PUT
-        void AtualizaLocacao(Locacao locacao);
+        void PutLocacao(Locacao locacao);
 
-        //DELETE
-        void RemoveLocacao(int id);
+        void DeleteLocacao(int id);
 
-
-        //GETINFO
-        bool LocalizaId(int id);
-
-        //GETINFO
-        bool
+        bool GetId(int id);
     }
 }

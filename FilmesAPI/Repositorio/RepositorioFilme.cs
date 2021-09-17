@@ -15,7 +15,7 @@ namespace FilmesAPI.Repositorio
 
         SqlDataReader dataRead = null;
 
-        public List<Filme> RetornaFilme()
+        public List<Filme> GetFilme()
         {
             string queryString = @"SELECT f.id, f.titulo, f.genero, f.datacadastro  FROM tb_filme as f";
             Filme filme;
@@ -59,7 +59,7 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public Filme RetornaFilmeId(int id)
+        public Filme GetFilmeById(int id)
         {
             string queryString = @"SELECT f.id, f.titulo, f.genero, f.datacadastro FROM tb_filme as f WHERE id = @id";
             Filme filme = null;
@@ -101,7 +101,7 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public void AdicionaFilme(Filme filme)
+        public void PostFilme(Filme filme)
         {
             string queryString = @"INSERT INTO tb_filme (titulo, genero, datacadastro) VALUES (@titulo, @genero, @datacadastro)";
 
@@ -131,7 +131,7 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public void AtualizaFilme(Filme filme)
+        public void PutFilme(Filme filme)
         {
             string queryString = @"UPDATE tb_filme SET titulo = @titulo, genero = @genero  WHERE id = @id";
 
@@ -162,7 +162,7 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public void RemoveFilme(int id)
+        public void DeleteFilme(int id)
         {
             string queryString = @"DELETE FROM tb_filme WHERE id = @id";
 
@@ -190,7 +190,7 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public bool LocalizaId(int id)
+        public bool GetId(int id)
         {
             string queryString = @"SELECT id FROM tb_filme WHERE id = @id";
 
@@ -213,9 +213,9 @@ namespace FilmesAPI.Repositorio
             }
         }
 
-        public bool TituloCadastrado(Filme filme)
+        public bool GetTitulo(Filme filme)
         {
-            string queryString = @"SELECT titulo, genero FROM tb_filme WHERE titulo = @titulo and genero = @genero";
+            string queryString = @"SELECT f.titulo, f.genero FROM tb_filme as f WHERE f.titulo = @titulo AND f.genero = @genero";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {

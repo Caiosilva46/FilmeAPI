@@ -19,7 +19,7 @@ namespace FilmesAPI.Repositorio
 
         public List<Cliente> GetCliente()
         {
-            string queryString = @"SELECT c.id, c.nome, c.cpf, c.rg, c.email, c.senha, c.ativo, c.datacadastro FROM tb_cliente as c";
+            string queryString = @"SELECT c.id, c.nome, c.cpf, c.rg, c.email, c.senha, c.ativo, c.datacadastro FROM tb_cliente AS c";
             Cliente cliente;
             List<Cliente> ListaDeClientes = new List<Cliente>();
 
@@ -67,7 +67,7 @@ namespace FilmesAPI.Repositorio
         public Cliente GetClienteById(int id)
         {
             Cliente cliente = null;
-            string queryString = @"SELECT c.id, c.nome, c.cpf, c.rg, c.email, c.senha, c.ativo, c.datacadastro FROM tb_cliente as c WHERE c.id = @id ";
+            string queryString = @"SELECT c.id, c.nome, c.cpf, c.rg, c.email, c.senha, c.ativo, c.datacadastro FROM tb_cliente AS c WHERE c.id = @id ";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -205,7 +205,7 @@ namespace FilmesAPI.Repositorio
 
         public bool GetId(int id)
         {
-            string queryString = @"SELECT c.id FROM tb_cliente as c WHERE id = @id";
+            string queryString = @"SELECT c.id FROM tb_cliente AS c WHERE id = @id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -228,7 +228,7 @@ namespace FilmesAPI.Repositorio
 
         public bool GetCpf(string cpf)
         {
-            string queryString = @"SELECT c.cpf FROM tb_cliente as c WHERE cpf = @cpf";
+            string queryString = @"SELECT c.cpf FROM tb_cliente AS c WHERE cpf = @cpf";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -251,7 +251,7 @@ namespace FilmesAPI.Repositorio
 
         public bool GetEmail(string email)
         {
-            string queryString = @"SELECT c.email FROM tb_cliente as c WHERE email = @email";
+            string queryString = @"SELECT c.email FROM tb_cliente AS c WHERE email = @email";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -274,7 +274,7 @@ namespace FilmesAPI.Repositorio
 
         public bool GetSenha(string senha, string email)
         {
-            string queryString = @"SELECT c.senha, c.email FROM tb_cliente as c WHERE c.senha = @senha and c.mail =@email ";
+            string queryString = @"SELECT c.senha, c.email FROM tb_cliente AS c WHERE c.senha = @senha AND c.email = @email";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -293,6 +293,29 @@ namespace FilmesAPI.Repositorio
 
                 connection.Close();
                 return senhaCryptografada;
+            }
+        }
+
+        public bool GetStatusLocacao(int id)
+        {
+            string queryString = @"SELECT l.filmeid FROM tb_locacao AS l JOIN tb_filme f ON f.id = l.filmeid WHERE l.filmeid = @id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                bool statusLocacao = false;
+                SqlCommand command = new SqlCommand(queryString, connection);
+                connection.Open();
+                command.Parameters.AddWithValue("@id", id);
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    statusLocacao = true;
+                }
+
+                connection.Close();
+                return statusLocacao;
             }
         }
     }

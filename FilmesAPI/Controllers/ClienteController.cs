@@ -65,9 +65,14 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult PutCliente(Cliente cliente)
         {
-            if(!_serviceCliente.GetId(cliente.Id))
+            if (!_serviceCliente.GetId(cliente.Id))
             {
                 return BadRequest("Cliente não localizado !");
+
+            }
+            else if (_serviceCliente.GetEmail(cliente.Email.ToString()) == true)
+            {
+                return BadRequest("Email já cadastrado para outro cliente, por favor, utilizar outro e-mail !");
             }
             _serviceCliente.PutCliente(cliente);
 
@@ -79,6 +84,11 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult DeleteCliente(int id)
         {
+            if (_serviceCliente.GetStatusLocacao(id) == true)
+            {
+                return BadRequest("Cliente não pode ser excluido, filmes locados em seu nome!");
+            }
+
             if (!_serviceCliente.GetId(id))
             {
                 return BadRequest("Cliente não localizado !");

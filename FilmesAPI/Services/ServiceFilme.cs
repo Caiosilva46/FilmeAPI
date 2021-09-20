@@ -44,7 +44,14 @@ namespace FilmesAPI.Services
 
         public bool GetTitulo(Filme filme)
         {
+            filme.Titulo = filme.Titulo.Trim();
+            filme.Genero = filme.Genero.Trim();
             return rep.GetTitulo(filme);
+        }
+
+        public bool GetStatusLocacao(int id)
+        {
+            return rep.GetStatusLocacao(id);
         }
     }
 }

@@ -43,6 +43,11 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult PostLocacao(Locacao locacao)
         {
+            if (!_serviceLocacao.GetClienteAtivo(locacao.ClienteId))
+            {
+                return BadRequest("Cliente precisa estar ativo para locação de filme!");
+            }
+
             _serviceLocacao.PostLocacao(locacao);
             return CreatedAtAction("adicionalocacao", locacao);
         }
@@ -55,6 +60,10 @@ namespace FilmesAPI.Controllers
             if (!_serviceLocacao.GetId(locacao.Id))
             {
                 return BadRequest("Locação não localizada para atualização!");
+            }
+            else if (!_serviceLocacao.GetClienteAtivo(locacao.ClienteId))
+            {
+                return BadRequest("Cliente precisa estar ativo para Atualização das informações!");
             }
             _serviceLocacao.PutLocacao(locacao);
             return Ok("Locação atualizada com sucesso !");

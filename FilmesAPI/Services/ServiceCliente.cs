@@ -33,6 +33,7 @@ namespace FilmesAPI.Services
 
         public void PutCliente(Cliente cliente)
         {
+            cliente.Nome = cliente.Nome.Trim();
             cliente.Email = ValidaEmail(cliente.Email.ToString());
             rep.PutCliente(cliente);
         }
@@ -60,6 +61,11 @@ namespace FilmesAPI.Services
         public bool GetSenha(string senha, string email)
         {
             return rep.GetSenha(senha, email);
+        }
+
+        public bool GetStatusLocacao(int id)
+        {
+            return rep.GetStatusLocacao(id);
         }
 
         public string CrypSenha(string senha)

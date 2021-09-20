@@ -26,5 +26,7 @@ namespace FilmesAPI.Interface
         bool GetEmail(string email);
 
         bool GetSenha(string senha, string email);
+
+        bool GetStatusLocacao(int id);
     }
 }

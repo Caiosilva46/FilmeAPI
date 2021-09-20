@@ -41,5 +41,10 @@ namespace FilmesAPI.Services
         {
             return rep.GetId(id);
         }
+
+        public bool GetClienteAtivo(int id)
+        {
+            return rep.GetClienteAtivo(id);
+        }
     }
 }

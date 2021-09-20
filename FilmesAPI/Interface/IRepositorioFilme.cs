@@ -21,5 +21,7 @@ namespace FilmesAPI.Interface
         bool GetId(int id);
 
         bool GetTitulo(Filme filme);
+
+        bool GetStatusLocacao(int id);
     }
 }

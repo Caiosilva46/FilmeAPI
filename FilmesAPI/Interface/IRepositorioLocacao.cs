@@ -19,5 +19,7 @@ namespace FilmesAPI.Interface
         void DeleteLocacao(int id);
 
         bool GetId(int id);
+
+        bool GetClienteAtivo(int id);
     }
 }

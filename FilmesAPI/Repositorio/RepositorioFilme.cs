@@ -17,7 +17,7 @@ namespace FilmesAPI.Repositorio
 
         public List<Filme> GetFilme()
         {
-            string queryString = @"SELECT f.id, f.titulo, f.genero, f.datacadastro  FROM tb_filme as f";
+            string queryString = @"SELECT f.id, f.titulo, f.genero, f.qtdestoque, f.ativo, f.datacadastro FROM tb_filme AS f";
             Filme filme;
             List<Filme> ListFilme = new List<Filme>();
 
@@ -33,10 +33,13 @@ namespace FilmesAPI.Repositorio
                     {
                         filme = new Filme
                         {
+                            Id = Convert.ToInt32(reader["id"].ToString()),
                             Titulo = reader["titulo"].ToString(),
                             Genero = reader["genero"].ToString(),
+                            QtdEstoque = Convert.ToInt32(reader["qtdestoque"].ToString()),
+                            Ativo = Convert.ToBoolean(reader["ativo"].ToString()),
                             DataCadastro = Convert.ToDateTime(reader["datacadastro"].ToString()),
-                            Id = Convert.ToInt32(reader["id"].ToString())
+
                         };
                         ListFilme.Add(filme);
                     }
@@ -61,7 +64,7 @@ namespace FilmesAPI.Repositorio
 
         public Filme GetFilmeById(int id)
         {
-            string queryString = @"SELECT f.id, f.titulo, f.genero, f.datacadastro FROM tb_filme as f WHERE id = @id";
+            string queryString = @"SELECT f.id, f.titulo, f.genero, f.qtdestoque, f.ativo, f.datacadastro FROM tb_filme AS f WHERE id = @id";
             Filme filme = null;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -80,6 +83,8 @@ namespace FilmesAPI.Repositorio
                             Id = Convert.ToInt32(reader["id"]),
                             Titulo = reader["titulo"].ToString(),
                             Genero = reader["genero"].ToString(),
+                            QtdEstoque = Convert.ToInt32(reader["qtdestoque"].ToString()),
+                            Ativo = Convert.ToBoolean(reader["ativo"].ToString()),
                             DataCadastro = Convert.ToDateTime(reader["datacadastro"].ToString())
                         };
                     }
@@ -103,7 +108,7 @@ namespace FilmesAPI.Repositorio
 
         public void PostFilme(Filme filme)
         {
-            string queryString = @"INSERT INTO tb_filme (titulo, genero, datacadastro) VALUES (@titulo, @genero, @datacadastro)";
+            string queryString = @"INSERT INTO tb_filme (titulo, genero, qtdestoque, ativo, datacadastro) VALUES (@titulo, @genero, @qtdestoque, @ativo, @datacadastro)";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -113,6 +118,8 @@ namespace FilmesAPI.Repositorio
                     connection.Open();
                     command.Parameters.AddWithValue("@titulo", filme.Titulo);
                     command.Parameters.AddWithValue("@genero", filme.Genero);
+                    command.Parameters.AddWithValue("@qtdestoque", filme.QtdEstoque);
+                    command.Parameters.AddWithValue("@ativo", filme.Ativo);
                     command.Parameters.AddWithValue("@datacadastro", DateTime.Now.ToShortDateString());
                     command.ExecuteNonQuery();
                 }
@@ -133,7 +140,7 @@ namespace FilmesAPI.Repositorio
 
         public void PutFilme(Filme filme)
         {
-            string queryString = @"UPDATE tb_filme SET titulo = @titulo, genero = @genero  WHERE id = @id";
+            string queryString = @"UPDATE tb_filme SET titulo = @titulo, genero = @genero, qtdestoque = @qtdestoque WHERE id = @id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -144,6 +151,7 @@ namespace FilmesAPI.Repositorio
                     command.Parameters.AddWithValue("@id", filme.Id);
                     command.Parameters.AddWithValue("@titulo", filme.Titulo);
                     command.Parameters.AddWithValue("@genero", filme.Genero);
+                    command.Parameters.AddWithValue("@qtdestoque", filme.QtdEstoque);
                     command.ExecuteNonQuery();
                 }
                 catch (Exception ex)
@@ -164,7 +172,7 @@ namespace FilmesAPI.Repositorio
 
         public void DeleteFilme(int id)
         {
-            string queryString = @"DELETE FROM tb_filme WHERE id = @id";
+            string queryString = @"UPDATE tb_filme SET ativo = 0 WHERE id = @id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -215,7 +223,7 @@ namespace FilmesAPI.Repositorio
 
         public bool GetTitulo(Filme filme)
         {
-            string queryString = @"SELECT f.titulo, f.genero FROM tb_filme as f WHERE f.titulo = @titulo AND f.genero = @genero";
+            string queryString = @"SELECT f.titulo, f.genero FROM tb_filme AS f WHERE f.titulo = @titulo AND f.genero = @genero";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -235,6 +243,29 @@ namespace FilmesAPI.Repositorio
                 connection.Close();
 
                 return filmeCadastrado;
+            }
+        }
+
+        public bool GetStatusLocacao(int id)
+        {
+            string queryString = @"SELECT l.filmeid FROM tb_locacao AS l JOIN tb_locacao c ON c.id = l.filmeid WHERE l.filmeid = @id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                bool statusLocacao = false;
+                SqlCommand command = new SqlCommand(queryString, connection);
+                connection.Open();
+                command.Parameters.AddWithValue("@id", id);
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    statusLocacao = true;
+                }
+
+                connection.Close();
+                return statusLocacao;
             }
         }
     }

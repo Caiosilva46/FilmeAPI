@@ -15,7 +15,7 @@ namespace FilmesAPI.Repositorio
 
         public List<Locacao> GetLocacao()
         {
-            string queryString = @"SELECT l.id, l.titulo, l.valor, l.dataretirada, l.datadevolucao, l.clienteid, l.filmeid FROM tb_locacao AS l JOIN tb_cliente c ON l.clienteid = c.id JOIN tb_filme f ON l.filmeid = f.id";
+            string queryString = @"SELECT l.id, l.valor, l.dataretirada, l.datadevolucao, l.clienteid, l.filmeid, l.ativo, l.qtdlocado FROM tb_locacao AS l JOIN tb_cliente c ON l.clienteid = c.id JOIN tb_filme f ON l.filmeid = f.id";
             Locacao locacao;
             List<Locacao> ListaLocacao = new List<Locacao>();
 
@@ -36,7 +36,9 @@ namespace FilmesAPI.Repositorio
                             DataRetirada = Convert.ToDateTime(reader["dataretirada"].ToString()),
                             DataDevolucao = Convert.ToDateTime(reader["datadevolucao"].ToString()),
                             ClienteId = Convert.ToInt32(reader["clienteid"].ToString()),
-                            FilmeId = Convert.ToInt32(reader["filmeid"].ToString())
+                            FilmeId = Convert.ToInt32(reader["filmeid"].ToString()),
+                            Ativo = Convert.ToBoolean(reader["ativo"].ToString()),
+                            QtdLocado = Convert.ToInt32(reader["qtdlocado"].ToString())
                         };
 
                         ListaLocacao.Add(locacao);
@@ -61,7 +63,7 @@ namespace FilmesAPI.Repositorio
 
         public Locacao GetLocacaoById(int id)
         {
-            string queryString = @"SELECT l.id, l.titulo, l.valor, l.dataretirada, l.datadevolucao, l.clienteid, l.filmeid FROM tb_locacao AS l JOIN tb_cliente c ON l.clienteid = c.id JOIN tb_filme f ON l.filmeid = f.id WHERE l.id = @id";
+            string queryString = @"SELECT l.id, l.valor, l.dataretirada, l.datadevolucao, l.clienteid, l.filmeid, l.ativo, l.qtdlocado FROM tb_locacao AS l JOIN tb_cliente c ON l.clienteid = c.id JOIN tb_filme f ON l.filmeid = f.id WHERE l.id = @id";
             Locacao locacao = null;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -82,7 +84,9 @@ namespace FilmesAPI.Repositorio
                             DataRetirada = Convert.ToDateTime(reader["dataretirada"].ToString()),
                             DataDevolucao = Convert.ToDateTime(reader["datadevolucao"].ToString()),
                             ClienteId = int.Parse(reader["clienteid"].ToString()),
-                            FilmeId = int.Parse(reader["filmeid"].ToString())
+                            FilmeId = int.Parse(reader["filmeid"].ToString()),
+                            Ativo = Convert.ToBoolean(reader["ativo"].ToString()),
+                            QtdLocado = Convert.ToInt32(reader["qtdlocado"].ToString())
                         };
                     }
                 }
@@ -97,7 +101,7 @@ namespace FilmesAPI.Repositorio
 
         public void PostLocacao(Locacao locacao)
         {
-            string queryString = @"INSERT INTO tb_locacao (titulo, valor, dataretirada, datadevolucao, clienteid, filmeid) VALUES (@titulo, @valor, @dataretirada, @datadevolucao, @clienteid, @filmeid)";
+            string queryString = @"INSERT INTO tb_locacao (valor, dataretirada, datadevolucao, clienteid, filmeid, ativo, qtdlocado) VALUES (@valor, @dataretirada, @datadevolucao, @clienteid, @filmeid, @ativo, @qtdlocado)";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -110,6 +114,8 @@ namespace FilmesAPI.Repositorio
                     command.Parameters.AddWithValue("@datadevolucao", locacao.DataDevolucao.ToShortDateString());
                     command.Parameters.AddWithValue("@clienteid", locacao.ClienteId);
                     command.Parameters.AddWithValue("@filmeid", locacao.FilmeId);
+                    command.Parameters.AddWithValue("@ativo", locacao.Ativo);
+                    command.Parameters.AddWithValue("@qtdlocado", locacao.QtdLocado);
                     command.ExecuteNonQuery();
                 }
                 catch (Exception)
@@ -125,7 +131,7 @@ namespace FilmesAPI.Repositorio
 
         public void PutLocacao(Locacao locacao)
         {
-            string queryString = @"UPDATE tb_locacao SET titulo = @titulo, valor = @valor WHERE id = @id";
+            string queryString = @"UPDATE tb_locacao SET valor = @valor WHERE id = @id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -152,7 +158,7 @@ namespace FilmesAPI.Repositorio
 
         public void DeleteLocacao(int id)
         {
-            string queryString = @"DELETE FROM tb_locacao WHERE id = @id";
+            string queryString = @"UPDATE tb_locacao SET ativo = 0 WHERE id = @id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -194,6 +200,29 @@ namespace FilmesAPI.Repositorio
 
                 connection.Close();
                 return resultado;
+            }
+        }
+
+        public bool GetClienteAtivo(int id)
+        {
+            string queryString = @"SELECT c.id, c.ativo FROM tb_cliente AS c WHERE ativo = 1 AND c.id = @id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                bool clienteAtivo = false;
+                SqlCommand command = new SqlCommand(queryString, connection);
+                connection.Open();
+                command.Parameters.AddWithValue("@id", id);
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    clienteAtivo = true;
+                }
+
+                connection.Close();
+                return clienteAtivo;
             }
         }
     }

@@ -25,6 +25,11 @@ namespace FilmesAPI.Models
 
         public int ClienteId { get; set; }
 
+        public bool Ativo { get; set; }
+
+        [Range(1, 100, ErrorMessage = "É preciso informar a quantidade locada!")]
+        public int QtdLocado { get; set; }
+
         public Cliente Cliente { get; set; }
 
         public Filme Filme { get; set; }

@@ -22,6 +22,8 @@ namespace FilmesAPI.Models
         [Range(0, 999, ErrorMessage ="O item não pode ter mais de 999 quantidades !")]
         public int QtdEstoque { get; set; }
 
+        public bool Ativo { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime DataCadastro { get; set; }
 

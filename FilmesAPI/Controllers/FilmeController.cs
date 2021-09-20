@@ -34,7 +34,7 @@ namespace FilmesAPI.Controllers
         {
             if (!_serviceFilme.GetId(id))
             {
-                return BadRequest("Filme não localizado !");
+                return BadRequest("Filme não localizado!");
             }
 
             return _serviceFilme.GetFilmeById(id);
@@ -47,7 +47,7 @@ namespace FilmesAPI.Controllers
         {
             if (_serviceFilme.GetTitulo(filme))
             {
-                return BadRequest("Já existe um filme cadastrado com esse Título e Gênero !");
+                return BadRequest("Já existe um filme cadastrado com esse Título e Gênero!");
             }
             _serviceFilme.PostFilme(filme);
             return CreatedAtAction("adicionafilme", filme);
@@ -60,10 +60,14 @@ namespace FilmesAPI.Controllers
         {
             if (!_serviceFilme.GetId(filme.Id))
             {
-                return BadRequest("");
+                return BadRequest("Filme não localizado para atualização!");
+            }
+            else if (_serviceFilme.GetTitulo(filme))
+            {
+                return BadRequest("Já existe um filme cadastrado com esse Título e Gênero!");
             }
             _serviceFilme.PutFilme(filme);
-            return Ok("Filme atualizado com sucesso !");
+            return Ok("Filme atualizado com sucesso!");
         }
 
         [HttpDelete("deletafilme/{id}")]
@@ -71,9 +75,13 @@ namespace FilmesAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult DeletaFilme(int id)
         {
+            if (_serviceFilme.GetStatusLocacao(id) == true)
+            {
+                return BadRequest("Filme não pode ser excluido, pois esta locado para um cliente!");
+            }
             if (!_serviceFilme.GetId(id))
             {
-                return BadRequest("Filme não localizado !");
+                return BadRequest("Filme não localizado!");
             }
             _serviceFilme.DeleteFilme(id);
 
